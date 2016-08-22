@@ -49,6 +49,8 @@ class MobiPublisher extends Epub2Publisher
         );
 
         $process = new Process($command);
+        $process->setTimeout(3600);
+        $process->setIdleTimeout(60);
         $process->run();
 
         $this->app['console.output']->write("\n\n".$process->getOutput()."\n\n");
