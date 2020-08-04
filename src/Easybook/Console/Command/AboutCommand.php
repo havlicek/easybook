@@ -35,8 +35,9 @@ class AboutCommand extends BaseCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln(sprintf(file_get_contents(__DIR__.'/Resources/AboutCommandHelp.txt'), $this->signature));
+        return 0;
     }
 }

@@ -11,18 +11,20 @@
 
 namespace Easybook\Util;
 
-class TwigCssExtension extends \Twig_Extension
+use Twig_Extension;
+use Twig_Function_Method;
+class TwigCssExtension extends Twig_Extension
 {
     public function getFunctions()
     {
         return array(
-            'lighten' => new \Twig_Function_Method($this, 'lighten'),
-            'darken' => new \Twig_Function_Method($this, 'darken'),
-            'fade' => new \Twig_Function_Method($this, 'fade'),
-            'css_add' => new \Twig_Function_Method($this, 'cssAdd'),
-            'css_substract' => new \Twig_Function_Method($this, 'cssSubstract'),
-            'css_multiply' => new \Twig_Function_Method($this, 'cssMultiply'),
-            'css_divide' => new \Twig_Function_Method($this, 'cssDivide'),
+            'lighten' => new Twig_Function_Method($this, 'lighten'),
+            'darken' => new Twig_Function_Method($this, 'darken'),
+            'fade' => new Twig_Function_Method($this, 'fade'),
+            'css_add' => new Twig_Function_Method($this, 'cssAdd'),
+            'css_substract' => new Twig_Function_Method($this, 'cssSubstract'),
+            'css_multiply' => new Twig_Function_Method($this, 'cssMultiply'),
+            'css_divide' => new Twig_Function_Method($this, 'cssDivide'),
 
         );
     }

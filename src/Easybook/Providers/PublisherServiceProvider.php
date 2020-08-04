@@ -11,6 +11,7 @@
 
 namespace Easybook\Providers;
 
+use RuntimeException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Easybook\Publishers\Epub2Publisher;
@@ -48,7 +49,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
                     break;
 
                 default:
-                    throw new \RuntimeException(sprintf(
+                    throw new RuntimeException(sprintf(
                         'Unknown "%s" format for "%s" edition (allowed: "pdf", "html", "html_chunked", "epub", "mobi")',
                         $outputFormat,
                         $app['publishing.edition']
@@ -56,7 +57,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
             }
 
             if (true !== $publisher->checkIfThisPublisherIsSupported()) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     "Your system doesn't support publishing books with the '%s' format\n"
                     .'Check the easybook documentation to know the dependencies required by this format.',
                     $outputFormat

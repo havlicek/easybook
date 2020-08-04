@@ -11,6 +11,7 @@
 
 namespace Easybook\Providers;
 
+use RuntimeException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Easybook\Util\Prince;
@@ -35,7 +36,7 @@ class PrinceXMLServiceProvider implements ServiceProviderInterface
                 $princePath = $app->askForPrinceXMLExecutablePath();
 
                 if (!file_exists($princePath)) {
-                    throw new \RuntimeException(sprintf(
+                    throw new RuntimeException(sprintf(
                          "We couldn't find the PrinceXML executable in the given directory (%s)", $princePath
                     ));
                 }

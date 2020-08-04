@@ -25,7 +25,7 @@ class EasybookVersionCommand extends BaseCommand
             ->setHelp('The <info>version</info> command shows you the installed version of <info>easybook</info>');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln(array(
             '',
@@ -34,5 +34,6 @@ class EasybookVersionCommand extends BaseCommand
             .'<comment>'.$this->app->getVersion().'</comment>',
             '',
         ));
+        return 0;
     }
 }

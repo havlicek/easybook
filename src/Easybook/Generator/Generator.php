@@ -2,6 +2,8 @@
 
 namespace Easybook\Generator;
 
+use Twig_Loader_Filesystem;
+use Twig_Environment;
 /**
  * Generic generator class to render Twig templates and save them as files.
  *
@@ -30,8 +32,8 @@ abstract class Generator
      */
     protected function render($skeletonDir, $template, $parameters)
     {
-        $loader = new \Twig_Loader_Filesystem($skeletonDir);
-        $twig = new \Twig_Environment($loader, array(
+        $loader = new Twig_Loader_Filesystem($skeletonDir);
+        $twig = new Twig_Environment($loader, array(
             'debug' => true,
             'cache' => false,
             'strict_variables' => true,

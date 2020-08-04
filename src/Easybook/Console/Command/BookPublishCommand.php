@@ -11,6 +11,7 @@
 
 namespace Easybook\Console\Command;
 
+use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,7 +45,7 @@ class BookPublishCommand extends BaseCommand
             ->setHelp(file_get_contents(__DIR__.'/Resources/BookPublishCommandHelp.txt'));
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $slug = $input->getArgument('slug');
         $edition = $input->getArgument('edition');
@@ -102,6 +103,7 @@ class BookPublishCommand extends BaseCommand
                 number_format($this->app['app.timer.finish'] - $this->app['app.timer.start'], 1)
             ),
         ));
+        return 0;
     }
 
     /**
@@ -133,7 +135,7 @@ class BookPublishCommand extends BaseCommand
         if ($process->isSuccessful()) {
             echo $process->getOutput();
         } else {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "There was an error executing the following script: \n"
                 ."  %s\n\n"
                 ."  %s\n",

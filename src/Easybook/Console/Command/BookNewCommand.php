@@ -38,7 +38,7 @@ class BookNewCommand extends BaseCommand
             ->setHelp(file_get_contents(__DIR__.'/Resources/BookNewCommandHelp.txt'));
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $title = Validator::validateNonEmptyString(
             'title', $input->getArgument('title')
@@ -74,6 +74,7 @@ class BookNewCommand extends BaseCommand
             ' <comment>'.realpath($generator->getBookDirectory()).'</comment>',
             '',
         ));
+        return 0;
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)

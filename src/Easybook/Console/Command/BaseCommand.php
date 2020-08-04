@@ -11,6 +11,7 @@
 
 namespace Easybook\Console\Command;
 
+use ReflectionClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -97,7 +98,7 @@ class BaseCommand extends Command
                 include_once $file->getPathName();
             }
 
-            $r = new \ReflectionClass($namespace.'\\'.$className);
+            $r = new ReflectionClass($namespace.'\\'.$className);
             if ($r->implementsInterface('Symfony\\Component\\EventDispatcher\\EventSubscriberInterface')) {
                 $this->app['dispatcher']->addSubscriber($r->newInstance());
             }

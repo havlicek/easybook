@@ -11,6 +11,9 @@
 
 namespace Easybook\Util;
 
+use ZipArchive;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 class Toolkit
 {
     /*
@@ -86,8 +89,8 @@ class Toolkit
             return false;
         }
 
-        $zip = new \ZipArchive();
-        if (!$zip->open($destination, \ZIPARCHIVE::CREATE)) {
+        $zip = new ZipArchive();
+        if (!$zip->open($destination, ZipArchive::CREATE)) {
             return false;
         }
 
@@ -95,9 +98,9 @@ class Toolkit
         $parent = pathinfo($source, PATHINFO_DIRNAME);
 
         if (is_dir($source)) {
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($source),
-                \RecursiveIteratorIterator::SELF_FIRST
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($source),
+                RecursiveIteratorIterator::SELF_FIRST
             );
 
             foreach ($files as $file) {
@@ -127,7 +130,7 @@ class Toolkit
      */
     public static function unzip($file, $destination)
     {
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
         $file = str_replace('\\', '/', realpath($file));
 

@@ -11,6 +11,7 @@
 
 namespace Easybook\Publishers;
 
+use RuntimeException;
 use ZendPdf\PdfDocument;
 
 /**
@@ -120,7 +121,7 @@ class PdfPublisher extends BasePublisher
             return $this->askForPrinceXMLPath();
         }
 
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             "ERROR: The PrinceXML library needed to generate PDF books cannot be found.\n"
                 ." Check that you have installed PrinceXML in a common directory \n"
                 ." or set your custom PrinceXML path in the book's config.yml file:\n\n"

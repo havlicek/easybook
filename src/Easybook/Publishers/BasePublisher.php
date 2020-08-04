@@ -11,6 +11,9 @@
 
 namespace Easybook\Publishers;
 
+use RuntimeException;
+use Twig_Error_Syntax;
+use Twig_Error_Loader;
 use Easybook\DependencyInjection\Application;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
@@ -89,7 +92,7 @@ class BasePublisher implements PublisherInterface
 
         // check that content file exists and is readable
         if (!is_readable($contentFilePath)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "The '%s' content associated with '%s' element doesn't exist\n"
                     ."or is not readable.\n\n"
                     ."Check that '%s'\n"
@@ -105,7 +108,7 @@ class BasePublisher implements PublisherInterface
         if ('.twig' == substr($contentFilePath, -5)) {
             try {
                 return $this->app->renderString(file_get_contents($contentFilePath));
-            } catch (\Twig_Error_Syntax $e) {
+            } catch (Twig_Error_Syntax $e) {
                 // if there is a Twig parsing error, notify the user but don't
                 // stop the book publication
                 $this->app['console.output']->writeln(sprintf(
@@ -133,7 +136,7 @@ class BasePublisher implements PublisherInterface
 
         try {
             return $this->app->render('@content/'.$contentFileName);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (Twig_Error_Loader $e) {
             // if Twig throws a Twig_Error_Loader exception,
             // there is no default content
             return '';

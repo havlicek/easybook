@@ -11,6 +11,8 @@
 
 namespace Easybook\Providers;
 
+use Twig_Loader_Filesystem;
+use Twig_Environment;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Easybook\Util\Toolkit;
@@ -32,7 +34,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $theme = ucfirst($app->edition('theme'));
             $format = Toolkit::camelize($app->edition('format'), true);
 
-            $loader = new \Twig_Loader_Filesystem($app['app.dir.themes']);
+            $loader = new Twig_Loader_Filesystem($app['app.dir.themes']);
 
             // Base theme (common styles per edition type)
             // <easybook>/app/Resources/Themes/Base/<edition-type>/Templates/<template-name>.twig
@@ -79,7 +81,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         $app['twig'] = function () use ($app) {
-            $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
+            $twig = new Twig_Environment($app['twig.loader'], $app['twig.options']);
             $twig->addExtension(new TwigCssExtension());
 
             $twig->addGlobal('app', $app);

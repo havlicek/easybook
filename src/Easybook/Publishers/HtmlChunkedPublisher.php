@@ -11,6 +11,8 @@
 
 namespace Easybook\Publishers;
 
+use RuntimeException;
+use Twig_Error_Loader;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
 
@@ -248,7 +250,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
         } elseif (2 == $chunkLevel) {
             return $this->generateSecondLevelChunks($item, $hasCustomCss);
         } else {
-            throw new \RuntimeException("The 'chunk_level' option of the book can only be '1' or '2'");
+            throw new RuntimeException("The 'chunk_level' option of the book can only be '1' or '2'");
         }
     }
 
@@ -282,7 +284,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
         try {
             $templateName = $item['config']['element'].'.twig';
             $this->app->render($templateName, $templateVariables, $chunkFilePath);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (Twig_Error_Loader $e) {
             $this->app->render('chunk.twig', $templateVariables, $chunkFilePath);
         }
 
@@ -335,7 +337,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
             try {
                 $templateName = $item['config']['element'].'.twig';
                 $this->app->render($templateName, $templateVariables, $chunkFilePath);
-            } catch (\Twig_Error_Loader $e) {
+            } catch (Twig_Error_Loader $e) {
                 $this->app->render('chunk.twig', $templateVariables, $chunkFilePath);
             }
         }

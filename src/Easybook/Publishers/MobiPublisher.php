@@ -11,6 +11,7 @@
 
 namespace Easybook\Publishers;
 
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -86,7 +87,7 @@ class MobiPublisher extends Epub2Publisher
       author: ...
       # ...
 YAML;
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "ERROR: The KindleGen library needed to generate MOBI books cannot be found.\n"
                     ." Check that you have installed KindleGen in a common directory \n"
                     ." or set your custom KindleGen path in the book's config.yml file:\n\n"

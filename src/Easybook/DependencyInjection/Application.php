@@ -11,6 +11,9 @@
 
 namespace Easybook\DependencyInjection;
 
+use Twig_Environment;
+use Twig_Loader_String;
+use RuntimeException;
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
@@ -324,7 +327,7 @@ SIGNATURE;
      */
     public function renderString($string, $variables = array())
     {
-        $twig = new \Twig_Environment(new \Twig_Loader_String(), $this['twig.options']);
+        $twig = new Twig_Environment(new Twig_Loader_String(), $this['twig.options']);
 
         $twig->addGlobal('app', $this);
 
@@ -354,7 +357,7 @@ SIGNATURE;
     public function render($template, $variables = array(), $targetFile = null)
     {
         if ('.twig' != substr($template, -5)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Unsupported format for "%s" template (easybook only supports Twig)',
                 $template
             ));

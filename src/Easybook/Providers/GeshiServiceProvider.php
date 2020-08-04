@@ -11,6 +11,7 @@
 
 namespace Easybook\Providers;
 
+use GeSHi;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -19,7 +20,7 @@ class GeshiServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         $app['geshi'] = function () use ($app) {
-            $geshi = new \GeSHi();
+            $geshi = new GeSHi();
             $geshi->enable_classes(); // this must be the first method (see Geshi doc)
             $geshi->set_encoding($app['app.charset']);
             $geshi->enable_line_numbers(GESHI_NO_LINE_NUMBERS);

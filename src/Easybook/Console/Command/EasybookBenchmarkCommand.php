@@ -11,6 +11,7 @@
 
 namespace Easybook\Console\Command;
 
+use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,7 +44,7 @@ class EasybookBenchmarkCommand extends BaseCommand
             ->setHelp('The <info>benchmark</info> command performs a full book publishing benchmark');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
 
@@ -59,6 +60,7 @@ class EasybookBenchmarkCommand extends BaseCommand
         $results = $this->benchmark($editions, $iterations);
         $this->displayResults($results);
         $this->tearDown();
+        return 0;
     }
 
     /**
@@ -123,7 +125,7 @@ class EasybookBenchmarkCommand extends BaseCommand
             $finish = microtime(true);
 
             if (!$process->isSuccessful()) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     "[ERROR] The benchmark couldn't be completed because there was\n"
                         ." an error while publishing the book with this command:\n"
                         ." %s\n\n"
@@ -232,7 +234,7 @@ class EasybookBenchmarkCommand extends BaseCommand
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "[ERROR] The benchmark didn't terminate in a clean way \n"
                     ." because the published book couldn't be deleted:\n\n"
                     .' %s',

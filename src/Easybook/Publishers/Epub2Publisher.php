@@ -11,6 +11,8 @@
 
 namespace Easybook\Publishers;
 
+use Twig_Error_Loader;
+use RuntimeException;
 use Symfony\Component\Process\Process;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
@@ -110,7 +112,7 @@ class Epub2Publisher extends HtmlPublisher
                 $templateName = $item['config']['element'].'.twig';
 
                 $this->app->render($templateName, $templateVariables, $renderedTemplatePath);
-            } catch (\Twig_Error_Loader $e) {
+            } catch (Twig_Error_Loader $e) {
                 $this->app->render('chunk.twig', $templateVariables, $renderedTemplatePath);
             }
         }
@@ -201,7 +203,7 @@ class Epub2Publisher extends HtmlPublisher
     private function prepareBookImages($targetDir)
     {
         if (!file_exists($targetDir)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 " ERROR: Books images couldn't be copied because \n"
                 ." the given '%s' \n"
                 ." directory doesn't exist.",
@@ -276,7 +278,7 @@ class Epub2Publisher extends HtmlPublisher
     private function prepareBookFonts($targetDir)
     {
         if (!file_exists($targetDir)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 " ERROR: Books fonts couldn't be copied because \n"
                     ." the given '%s' \n"
                     ." directory doesn't exist.",
@@ -371,7 +373,7 @@ class Epub2Publisher extends HtmlPublisher
             return $this->zipBookContentsWithPhpExtension($directory, $zip_file);
         }
 
-        throw new \RuntimeException(
+        throw new RuntimeException(
             "[ERROR] The ePub file couldn't be published because your \n"
             ." Operating System doesn't support the 'zip' command and your \n"
             ." PHP installation hasn't enabled the 'Zip' extension. \n\n"
@@ -402,7 +404,7 @@ class Epub2Publisher extends HtmlPublisher
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "[ERROR] 'zip' command execution wasn't successful.\n\n"
                 ."Executed command:\n"
                 ." $command\n\n"

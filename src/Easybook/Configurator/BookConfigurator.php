@@ -11,6 +11,8 @@
 
 namespace Easybook\Configurator;
 
+use RuntimeException;
+use UnexpectedValueException;
 use Symfony\Component\Yaml\Yaml;
 use Easybook\DependencyInjection\Application;
 
@@ -65,7 +67,7 @@ class BookConfigurator
      */
     public function loadCommandConfiguration($configurationJsonString)
     {
-        $config = json_decode($configurationJsonString, true);
+        $config = json_decode($configurationJsonString, true, 512, JSON_THROW_ON_ERROR);
 
         return empty($config) ? array() : $config;
     }
@@ -84,7 +86,7 @@ class BookConfigurator
         $bookConfigFile = $bookDir.'/config.yml';
 
         if (!file_exists($bookConfigFile)) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "There is no 'config.yml' configuration file for '%s' book \n\n"
                 ."Try to create the book again with the 'new' command or create \n"
                 ."'%s' file by hand",
@@ -123,7 +125,7 @@ class BookConfigurator
         $edition = $this->app['publishing.edition'];
 
         if (!isset($bookConfiguration['book']['editions'][$edition])) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "ERROR: The '%s' edition isn't defined for\n"
                     ."'%s' book.",
                 $edition, $this->app->book('title')
@@ -161,7 +163,7 @@ class BookConfigurator
 
         if (null !== $parentEdition) {
             if (!isset($bookEditions[$parentEdition])) {
-                throw new \UnexpectedValueException(sprintf(
+                throw new UnexpectedValueException(sprintf(
                     " ERROR: '%s' edition extends nonexistent '%s' edition"
                         ."\n\n"
                         ."Check in '%s' file \n"

@@ -11,6 +11,7 @@
 
 namespace Easybook\Providers;
 
+use RuntimeException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Easybook\Parsers\MarkdownParser;
@@ -33,7 +34,7 @@ class ParserServiceProvider implements ServiceProviderInterface
                 return new MarkdownParser($app);
             }
 
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Unknown "%s" format for "%s" content (easybook only supports Markdown)',
                 $format,
                 $app['publishing.active_item']['config']['content']

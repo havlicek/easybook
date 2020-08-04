@@ -11,6 +11,7 @@
 
 namespace Easybook\Util;
 
+use RuntimeException;
 use Pimple\Container;
 
 class CodeHighlighter
@@ -66,7 +67,7 @@ class CodeHighlighter
             $this->app['filesystem']->mkdir($cacheDir);
 
             if (false === @file_put_contents($cacheFilename, $highlightedCode)) {
-                throw new \RuntimeException(sprintf("ERROR: Failed to write cache file \n'%s'.", $cacheFilename));
+                throw new RuntimeException(sprintf("ERROR: Failed to write cache file \n'%s'.", $cacheFilename));
             }
         }
 

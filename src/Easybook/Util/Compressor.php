@@ -12,6 +12,7 @@
 
 namespace Easybook\Util;
 
+use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Easybook\DependencyInjection\Application;
@@ -78,15 +79,15 @@ class Compressor
 
     private function addBookScript()
     {
-        $this->addFile(new \SplFileInfo($this->rootDir.'/book'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/book'));
     }
 
     private function addAutoloaders()
     {
-        $this->addFile(new \SplFileInfo($this->rootDir.'/vendor/autoload.php'));
-        $this->addFile(new \SplFileInfo($this->rootDir.'/vendor/composer/ClassLoader.php'));
-        $this->addFile(new \SplFileInfo($this->rootDir.'/vendor/composer/autoload_classmap.php'));
-        $this->addFile(new \SplFileInfo($this->rootDir.'/vendor/composer/autoload_namespaces.php'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/vendor/autoload.php'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/vendor/composer/ClassLoader.php'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/vendor/composer/autoload_classmap.php'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/vendor/composer/autoload_namespaces.php'));
     }
 
     private function addResources()
@@ -123,10 +124,10 @@ class Compressor
 
     private function addCommandHelp()
     {
-        $this->addFile(new \SplFileInfo(
+        $this->addFile(new SplFileInfo(
             $this->rootDir.'/src/Easybook/Console/Command/Resources/BookNewCommandHelp.txt'
         ));
-        $this->addFile(new \SplFileInfo(
+        $this->addFile(new SplFileInfo(
             $this->rootDir.'/src/Easybook/Console/Command/Resources/BookPublishCommandHelp.txt'
         ));
     }
@@ -180,8 +181,8 @@ class Compressor
 
     private function addLicenseAndReadme()
     {
-        $this->addFile(new \SplFileInfo($this->rootDir.'/LICENSE.md'));
-        $this->addFile(new \SplFileInfo($this->rootDir.'/README.md'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/LICENSE.md'));
+        $this->addFile(new SplFileInfo($this->rootDir.'/README.md'));
     }
 
     /**
@@ -190,7 +191,7 @@ class Compressor
      * @param \SplFileInfo $file    The file to be added
      * @param bool         $verbose If true, it shows progress by printing a dot for each added file
      */
-    private function addFile(\SplFileInfo $file, $verbose = true)
+    private function addFile(SplFileInfo $file, $verbose = true)
     {
         $this->fileCount++;
 

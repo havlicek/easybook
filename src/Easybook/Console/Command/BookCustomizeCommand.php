@@ -11,6 +11,7 @@
 
 namespace Easybook\Console\Command;
 
+use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -38,7 +39,7 @@ class BookCustomizeCommand extends BaseCommand
             ->setHelp(file_get_contents(__DIR__.'/Resources/BookCustomizeCommandHelp.txt'));
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $slug = $input->getArgument('slug');
         $edition = $input->getArgument('edition');
@@ -83,6 +84,7 @@ class BookCustomizeCommand extends BaseCommand
                 $this->app['publishing.dir.templates'], $this->app->edition('format')
             ),
         ));
+        return 0;
     }
 
     private function prepareCustomizationDir($dir)
@@ -101,7 +103,7 @@ class BookCustomizeCommand extends BaseCommand
         if (!file_exists($file)) {
             $this->app['filesystem']->copy($customizationSkeleton, $file);
         } else {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "ERROR: The '%s' edition already contains a custom CSS stylesheet.\n"
                     ." You can find it at the following file:\n\n"
                     .' %s',
