@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents as Events;
