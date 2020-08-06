@@ -19,6 +19,7 @@ use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
 use Easybook\Generator\BookGenerator;
 use Easybook\Util\Validator;
+use Symfony\Component\Console\Question\Question;
 
 class BookNewCommand extends BaseCommand
 {
@@ -92,18 +93,19 @@ class BookNewCommand extends BaseCommand
             '',
         ));
 
-        $dialog = $this->getHelperSet()->get('dialog');
-
-        // check `title` argument
-        $title = $input->getArgument('title') ?: $dialog->askAndValidate(
-            $output,
+        $helper = $this->getHelper('question');
+        $question = new Question(
             "\n Please, type the <info>title</info> of the book"
             .' (e.g. <comment>The Origin of Species</comment>)'
             ."\n > ",
-            function ($title) {
-                return Validator::validateNonEmptyString('title', $title);
-            }
+            false
         );
+        $question->setValidator(static function ($title) {
+            return Validator::validateNonEmptyString('title', $title);
+        });
+
+        // check `title` argument
+        $title = $input->getArgument('title') ?: $helper->ask($input, $output, $question);
         $input->setArgument('title', $title);
     }
 }
