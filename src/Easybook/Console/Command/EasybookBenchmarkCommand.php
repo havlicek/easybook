@@ -28,7 +28,7 @@ class EasybookBenchmarkCommand extends BaseCommand
 {
     private $output;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('benchmark')
@@ -72,7 +72,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      *
      * @return array The results of the benchmark
      */
-    private function benchmark(array $editions, $iterations)
+    private function benchmark(array $editions, int $iterations): array
     {
         $results = array();
 
@@ -107,7 +107,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      *
      * @throws \RuntimeException If the edition cannot be published
      */
-    private function benchmarkEdition($edition, $iterations)
+    private function benchmarkEdition(string $edition, int $iterations): array
     {
         $results = array();
 
@@ -159,7 +159,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      *
      * @return array The mean results for all the iterations of the benchmark
      */
-    private function calculateMeanResults(array $results)
+    private function calculateMeanResults(array $results): array
     {
         $meanResults = array();
 
@@ -193,8 +193,9 @@ class EasybookBenchmarkCommand extends BaseCommand
      * of the benchmark.
      *
      * @param array $results The benchmark results to be displayed
+     * @return array
      */
-    private function displayResults(array $results)
+    private function displayResults(array $results): array
     {
         $table = $this->getHelperSet()->get('table');
         $table
@@ -222,7 +223,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      *
      * @throws \RuntimeException If the published book cannot be deleted
      */
-    private function tearDown()
+    private function tearDown(): void
     {
         $deletePublishedBookCommand = sprintf(
             'cd %s && rm -fr %s',
@@ -253,7 +254,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      *
      * @return float The score of the benchmark in a 0..100 scale
      */
-    private function getScore($elapsedTime, $consumedMemory, $edition)
+    private function getScore(float $elapsedTime, int $consumedMemory, string $edition): float
     {
         $maxAcceptableValue = array(//   msec.              bytes
             'ebook' => array('time' => 3000,  'memory' => 3 * 1024 * 1024),

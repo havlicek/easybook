@@ -63,7 +63,7 @@ class MarkdownParser implements ParserInterface
      *
      * @throws \Exception If the given $syntax is not supported
      */
-    private function transformToHtml($content, $syntax)
+    private function transformToHtml(string $content, string $syntax): string
     {
         $supportedSyntaxes = array('original', 'php-markdown-extra', 'easybook');
 

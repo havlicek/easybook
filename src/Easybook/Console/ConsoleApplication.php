@@ -24,7 +24,7 @@ class ConsoleApplication extends SymfonyConsoleApplication
 {
     private $app;
 
-    public function getApp()
+    public function getApp(): Application
     {
         return $this->app;
     }

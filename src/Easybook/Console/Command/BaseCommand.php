@@ -34,12 +34,12 @@ class BaseCommand extends Command
      *
      * @return Application The object that represents the dependency injection container
      */
-    public function getApp()
+    public function getApp(): Application
     {
         return $this->app;
     }
 
-    protected function initialize(InputInterface $input = null, OutputInterface $output = null)
+    protected function initialize(InputInterface $input = null, OutputInterface $output = null): void
     {
         $this->app = $this->getApplication()->getApp();
     }
@@ -49,7 +49,7 @@ class BaseCommand extends Command
      *
      * @return string The string that represents the command
      */
-    public function asText()
+    public function asText(): string
     {
         $app = $this->getApplication()->getApp();
         $txt = $app['app.signature']
@@ -63,7 +63,7 @@ class BaseCommand extends Command
      * Registers both the built-in easybook plugins and any other
      * custom plugin defined by the book.
      */
-    public function registerPlugins()
+    public function registerPlugins(): void
     {
         // register easybook plugins
         $this->registerEventSubscribers($this->app['app.dir.plugins'], 'Easybook\\Plugins');
@@ -79,7 +79,7 @@ class BaseCommand extends Command
      * @param string $dir       The directory where the classes are looked for
      * @param string $namespace The namespace of the classes tha define the event subscribers
      */
-    private function registerEventSubscribers($dir, $namespace = '')
+    private function registerEventSubscribers(string $dir, string $namespace = ''): void
     {
         if (!file_exists($dir)) {
             return;

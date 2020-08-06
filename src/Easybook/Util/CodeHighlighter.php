@@ -19,7 +19,7 @@ class CodeHighlighter
     private $app;
 
     /**
-     * @param Container app The object that represents the whole dependency container
+     * @param Container $app The object that represents the whole dependency container
      */
     public function __construct(Container $app)
     {
@@ -36,7 +36,7 @@ class CodeHighlighter
      *
      * @throws \RuntimeException If the cache used to store the highlighted code isn't writable
      */
-    public function highlight($code, $language)
+    public function highlight(string $code, string $language): string
     {
         if ('html' == $language) {
             $language = 'html5';

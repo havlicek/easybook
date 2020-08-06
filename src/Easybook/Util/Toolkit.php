@@ -27,15 +27,8 @@ class Toolkit
      * code inspired by:
      * http://www.php.net/manual/en/function.array-merge-recursive.php#104145
      */
-    public static function array_deep_merge_and_replace()
+    public static function array_deep_merge_and_replace(array ...$arrays): ?array
     {
-        if (func_num_args() < 2) {
-            trigger_error(__FUNCTION__.' needs two or more array arguments', E_USER_WARNING);
-
-            return;
-        }
-
-        $arrays = func_get_args();
         $merged = array();
 
         while (!empty($arrays)) {
@@ -44,7 +37,7 @@ class Toolkit
             if (!is_array($array)) {
                 trigger_error(__FUNCTION__.' encountered a non array argument', E_USER_WARNING);
 
-                return;
+                return null;
             }
 
             if (empty($array)) {
@@ -83,7 +76,7 @@ class Toolkit
      * @param  string $source       The directory with the files to compress
      * @param  string $destination  The path of the generated ZIP file
      */
-    public static function zip($source, $destination)
+    public static function zip(string $source, string $destination): bool
     {
         if (!extension_loaded('zip') || !file_exists($source)) {
             return false;
@@ -128,7 +121,7 @@ class Toolkit
      * @param  string $destination directory to unzip into
      * @return boolean success
      */
-    public static function unzip($file, $destination)
+    public static function unzip(string $file, string $destination): boolean
     {
         $zip = new ZipArchive();
 
@@ -150,7 +143,7 @@ class Toolkit
      *
      * code copied from http://www.php.net/manual/en/function.uniqid.php#94959
      */
-    public static function uuid()
+    public static function uuid(): string
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             mt_rand(0, 0xffff), mt_rand(0, 0xffff),
@@ -172,7 +165,7 @@ class Toolkit
      *
      * code adapted from Symfony\Component\DependencyInjection\Container.php
      */
-    public static function camelize($string, $upperFirst = false)
+    public static function camelize(string $string, bool $upperFirst = false): string
     {
         return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) use ($upperFirst) {
             $camelized = ('.' === $match[1] ? '_' : '').strtoupper($match[2]);

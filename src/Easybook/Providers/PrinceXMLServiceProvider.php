@@ -18,7 +18,7 @@ use Easybook\Util\Prince;
 
 class PrinceXMLServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['prince.path'] = null;
 

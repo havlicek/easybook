@@ -33,7 +33,7 @@ use Easybook\Util\Validator;
 
 class Application extends Container
 {
-    const VERSION = '5.0-DEV';
+    public const VERSION = '5.0-DEV';
 
     public function __construct()
     {
@@ -175,7 +175,7 @@ SIGNATURE;
         };
     }
 
-    final public function getVersion()
+    final public function getVersion(): string
     {
         return static::VERSION;
     }
@@ -217,7 +217,7 @@ SIGNATURE;
      *
      * @return array The resulting array element (with the new value appended)
      */
-    public function append($id, $value)
+    public function append(string $id, $value): array
     {
         $array = $this[$id];
         $array[] = $value;
@@ -235,7 +235,7 @@ SIGNATURE;
      *
      * @return string The generated slug
      */
-    public function slugify($string, $separator = null, $prefix = null)
+    public function slugify(string $string, string $separator = null, string $prefix = null): string
     {
         $slug = $this['slugger']->slugify($string, $separator);
 
@@ -259,7 +259,7 @@ SIGNATURE;
      *
      * @return string The generated slug
      */
-    public function slugifyUniquely($string, $separator = null, $prefix = null)
+    public function slugifyUniquely(string $string, string $separator = null, string $prefix = null): string
     {
         $defaultOptions = $this['slugger.options'];
 
@@ -286,7 +286,7 @@ SIGNATURE;
      *
      * @return string The label of the element or an empty string
      */
-    public function getLabel($element, $variables = array())
+    public function getLabel(string $element, array $variables = []): string
     {
         $label = isset($this['labels']['label'][$element])
             ? $this['labels']['label'][$element]
@@ -308,7 +308,7 @@ SIGNATURE;
      *
      * @return string The title of the element or an empty string
      */
-    public function getTitle($element)
+    public function getTitle(string $element): string
     {
         return isset($this['titles']['title'][$element])
             ? $this['titles']['title'][$element]
@@ -325,7 +325,7 @@ SIGNATURE;
      *
      * @return string The result of rendering the original string as a Twig template
      */
-    public function renderString($string, $variables = array())
+    public function renderString(string $string, array $variables = []): string
     {
         $twig = new Twig_Environment(new Twig_Loader_String(), $this['twig.options']);
 
@@ -354,7 +354,7 @@ SIGNATURE;
      *
      *  @throws \RuntimeException  If the given template is not a Twig template
      */
-    public function render($template, $variables = array(), $targetFile = null)
+    public function render(string $template, array $variables = array(), $targetFile = null): string
     {
         if ('.twig' != substr($template, -5)) {
             throw new RuntimeException(sprintf(
@@ -388,7 +388,7 @@ SIGNATURE;
      *
      * @return string|null The path of the custom template or null if there is none
      */
-    public function getCustomTemplate($templateName)
+    public function getCustomTemplate(string $templateName): ?string
     {
         $paths = array(
             $this['publishing.dir.templates'].'/'.$this['publishing.edition'],
@@ -407,7 +407,7 @@ SIGNATURE;
      *
      * @return string|null The path of the custom labels file or null if there is none
      */
-    public function getCustomLabelsFile()
+    public function getCustomLabelsFile(): ?string
     {
         $labelsFileName = 'labels.'.$this->book('language').'.yml';
         $paths = array(
@@ -427,7 +427,7 @@ SIGNATURE;
      *
      * @return string|null The path of the custom titles file or null if there is none
      */
-    public function getCustomTitlesFile()
+    public function getCustomTitlesFile(): ?string
     {
         $titlesFileName = 'titles.'.$this->book('language').'.yml';
         $paths = array(
@@ -447,7 +447,7 @@ SIGNATURE;
      *
      * @return string|null The path of the custom cover image or null if there is none
      */
-    public function getCustomCoverImage()
+    public function getCustomCoverImage(): ?string
     {
         $coverFileName = 'cover.jpg';
         $paths = array(
@@ -469,7 +469,7 @@ SIGNATURE;
      * @return string|null The absolute filepath of the first found file or
      *                     null if the file isn't found in any of those paths.
      */
-    public function getFirstExistingFile($file, array $paths)
+    public function getFirstExistingFile(string $file, array $paths): ?string
     {
         foreach ($paths as $path) {
             if (file_exists($path.'/'.$file)) {
@@ -477,7 +477,7 @@ SIGNATURE;
             }
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -490,7 +490,7 @@ SIGNATURE;
      *
      * @throws \RuntimeException If the cache used to store the highlighted code isn't writable
      */
-    public function highlight($code, $language = 'code')
+    public function highlight($code, $language = 'code'): string
     {
         return $this['highlighter']->highlight($code, $language);
     }
@@ -501,7 +501,7 @@ SIGNATURE;
      * @param string $eventName   The name of the dispatched event
      * @param Event  $eventObject The object that stores event data
      */
-    public function dispatch($eventName, $eventObject = null)
+    public function dispatch(string $eventName, Event $eventObject = null): void
     {
         $this['dispatcher']->dispatch($eventName, $eventObject);
     }
@@ -513,7 +513,7 @@ SIGNATURE;
      *
      * @param string $configurationViaCommand The configuration options provided via the console command
      */
-    public function loadBookConfiguration($configurationViaCommand = '')
+    public function loadBookConfiguration($configurationViaCommand = ''): void
     {
         $config = $this['configurator']->loadBookConfiguration($this['publishing.dir.book'], $configurationViaCommand);
         $this['publishing.book.config'] = $config;
@@ -530,7 +530,7 @@ SIGNATURE;
     /**
      * It loads the (optional) easybook configuration parameters defined by the book.
      */
-    public function loadEasybookConfiguration()
+    public function loadEasybookConfiguration(): void
     {
         $bookFileConfig = $this['configurator']->loadBookFileConfiguration($this['publishing.dir.book']);
 
@@ -563,7 +563,7 @@ SIGNATURE;
      *
      * @return mixed It only returns a value when the second argument is null
      */
-    public function book($key, $newValue = null)
+    public function book(string $key, $newValue = null)
     {
         $bookConfig = $this['publishing.book.config'];
 
@@ -589,7 +589,7 @@ SIGNATURE;
      *
      * @return mixed It only returns a value when the second argument is null
      */
-    public function edition($key, $newValue = null)
+    public function edition(string $key, $newValue = null)
     {
         $bookConfig = $this['publishing.book.config'];
         $publishingEdition = $this['publishing.edition'];

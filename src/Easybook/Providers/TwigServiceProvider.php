@@ -20,7 +20,7 @@ use Easybook\Util\TwigCssExtension;
 
 class TwigServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['twig.options'] = array(
             'autoescape' => false,

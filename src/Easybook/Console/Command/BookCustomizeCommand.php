@@ -88,14 +88,14 @@ class BookCustomizeCommand extends BaseCommand
         return 0;
     }
 
-    private function prepareCustomizationDir($dir)
+    private function prepareCustomizationDir($dir): void
     {
         if (!file_exists($dir)) {
             $this->app['filesystem']->mkdir($dir);
         }
     }
 
-    private function prepareCustomizationCssFile($file)
+    private function prepareCustomizationCssFile($file): void
     {
         $customizationSkeleton = sprintf('%s/Customization/%s/style.css',
             $this->app['app.dir.skeletons'], $this->app->edition('format')
@@ -113,7 +113,7 @@ class BookCustomizeCommand extends BaseCommand
         }
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln($this->app['app.signature']);
 

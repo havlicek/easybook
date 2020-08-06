@@ -27,7 +27,7 @@ class AboutCommand extends BaseCommand
         $this->signature = $signature;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('about')

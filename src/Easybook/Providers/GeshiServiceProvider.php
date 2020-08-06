@@ -17,9 +17,9 @@ use Pimple\ServiceProviderInterface;
 
 class GeshiServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
-        $app['geshi'] = function () use ($app) {
+        $app['geshi'] = static function () use ($app) {
             $geshi = new GeSHi();
             $geshi->enable_classes(); // this must be the first method (see Geshi doc)
             $geshi->set_encoding($app['app.charset']);

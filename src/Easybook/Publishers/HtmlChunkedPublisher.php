@@ -35,7 +35,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      * the items of the books published as websites are decorated afterwards with some
      * special Twig templates.
      */
-    public function decorateContents()
+    public function decorateContents(): void
     {
         $decoratedItems = array();
 
@@ -58,7 +58,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
         $this->app['publishing.items'] = $decoratedItems;
     }
 
-    public function assembleBook()
+    public function assembleBook(): void
     {
         $this->app['publishing.dir.output'] = $this->app['publishing.dir.output'].'/book';
         $this->app['filesystem']->mkdir($this->app['publishing.dir.output']);
@@ -112,7 +112,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      * This eases the navigation between chunks because it makes trivial
      * to find the next and the previous chunk.
      */
-    private function flattenToc()
+    private function flattenToc(): array
     {
         $flattenedToc = array();
 
@@ -177,7 +177,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The book items with their new 'page_name' property.
      */
-    private function normalizePageNames($items)
+    private function normalizePageNames(array $items): array
     {
         $itemsWithNormalizedPageNames = array();
 
@@ -203,7 +203,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The book items with their new TOCs.
      */
-    private function fixItemsWithEmptyTocs($items)
+    private function fixItemsWithEmptyTocs(array $items): array
     {
         $itemsWithFixedTocs = array();
 

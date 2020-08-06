@@ -18,7 +18,7 @@ use EasySlugger\Utf8Slugger;
 
 class SluggerServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['slugger.options'] = array(
             'separator' => '-', // used between words and instead of illegal characters

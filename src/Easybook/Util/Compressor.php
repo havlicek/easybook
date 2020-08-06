@@ -49,7 +49,7 @@ class Compressor
         $this->filesystem->mkdir($this->packageDir);
     }
 
-    public function build($zipFile = null)
+    public function build(string $zipFile = null): void
     {
         $this->zipFile = $zipFile ?: sprintf('%s/easybook-%s.zip', $this->rootDir, $this->version);
         if (file_exists($this->zipFile)) {
@@ -77,12 +77,12 @@ class Compressor
         );
     }
 
-    private function addBookScript()
+    private function addBookScript(): void
     {
         $this->addFile(new SplFileInfo($this->rootDir.'/book'));
     }
 
-    private function addAutoloaders()
+    private function addAutoloaders(): void
     {
         $this->addFile(new SplFileInfo($this->rootDir.'/vendor/autoload.php'));
         $this->addFile(new SplFileInfo($this->rootDir.'/vendor/composer/ClassLoader.php'));
@@ -90,7 +90,7 @@ class Compressor
         $this->addFile(new SplFileInfo($this->rootDir.'/vendor/composer/autoload_namespaces.php'));
     }
 
-    private function addResources()
+    private function addResources(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -104,7 +104,7 @@ class Compressor
         }
     }
 
-    private function addSampleBooks()
+    private function addSampleBooks(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -122,7 +122,7 @@ class Compressor
         }
     }
 
-    private function addCommandHelp()
+    private function addCommandHelp(): void
     {
         $this->addFile(new SplFileInfo(
             $this->rootDir.'/src/Easybook/Console/Command/Resources/BookNewCommandHelp.txt'
@@ -132,7 +132,7 @@ class Compressor
         ));
     }
 
-    private function addCoreClasses()
+    private function addCoreClasses(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -149,7 +149,7 @@ class Compressor
         }
     }
 
-    private function addVendors()
+    private function addVendors(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -179,7 +179,7 @@ class Compressor
         }
     }
 
-    private function addLicenseAndReadme()
+    private function addLicenseAndReadme(): void
     {
         $this->addFile(new SplFileInfo($this->rootDir.'/LICENSE.md'));
         $this->addFile(new SplFileInfo($this->rootDir.'/README.md'));
@@ -191,7 +191,7 @@ class Compressor
      * @param \SplFileInfo $file    The file to be added
      * @param bool         $verbose If true, it shows progress by printing a dot for each added file
      */
-    private function addFile(SplFileInfo $file, $verbose = true)
+    private function addFile(SplFileInfo $file, bool $verbose = true): void
     {
         $this->fileCount++;
 

@@ -23,7 +23,7 @@ use Symfony\Component\Console\Question\Question;
 
 class BookNewCommand extends BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('new')
@@ -78,7 +78,7 @@ class BookNewCommand extends BaseCommand
         return 0;
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln($this->app['app.signature']);
 

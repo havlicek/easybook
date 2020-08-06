@@ -24,7 +24,7 @@ class MobiPublisher extends Epub2Publisher
     // should contain an HTML TOC, so it cannot be excluded
     protected $excludedElements = array('cover', 'lot', 'lof');
 
-    public function checkIfThisPublisherIsSupported()
+    public function checkIfThisPublisherIsSupported(): bool
     {
         if (null !== $this->app['kindlegen.path'] && file_exists($this->app['kindlegen.path'])) {
             $kindleGenPath = $this->app['kindlegen.path'];
@@ -37,7 +37,7 @@ class MobiPublisher extends Epub2Publisher
         return null !== $kindleGenPath && file_exists($kindleGenPath);
     }
 
-    public function assembleBook()
+    public function assembleBook(): void
     {
         parent::assembleBook();
 
@@ -65,7 +65,7 @@ class MobiPublisher extends Epub2Publisher
      *
      * @throws \RuntimeException If the KindleGen executable is not found
      */
-    private function findKindleGenPath()
+    private function findKindleGenPath(): string
     {
         foreach ($this->app['kindlegen.default_paths'] as $path) {
             if (file_exists($path)) {
@@ -102,7 +102,7 @@ YAML;
     /**
      * @codeCoverageIgnore
      */
-    private function askForKindleGenPath()
+    private function askForKindleGenPath(): string
     {
         $this->app['console.output']->write(sprintf(
                 " In order to generate MOBI ebooks, KindleGen library must be installed. \n\n"

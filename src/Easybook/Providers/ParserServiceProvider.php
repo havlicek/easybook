@@ -18,7 +18,7 @@ use Easybook\Parsers\MarkdownParser;
 
 class ParserServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['parser.options'] = array(
             // available syntaxes: 'original', 'php-markdown-extra', 'easybook'

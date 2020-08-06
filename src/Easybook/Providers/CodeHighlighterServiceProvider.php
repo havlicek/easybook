@@ -17,7 +17,7 @@ use Easybook\Util\CodeHighlighter;
 
 class CodeHighlighterServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         if (empty($app['geshi'])) {
             $geshi = new GeshiServiceProvider();

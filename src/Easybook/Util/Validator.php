@@ -30,7 +30,7 @@ class Validator
     /**
      * Validates that the given $value is not an empty string.
      */
-    public static function validateNonEmptyString($name, $value)
+    public static function validateNonEmptyString(string $name, ?string $value): string
     {
         if (null === $value || '' === trim($value)) {
             // it throws an exception for invalid values because it's used in console commands
@@ -40,7 +40,7 @@ class Validator
         return $value;
     }
 
-    public static function validateDirExistsAndWritable($dir)
+    public static function validateDirExistsAndWritable(string $dir): string
     {
         if (null === $dir || '' === trim($dir)) {
             // it throws an exception for invalid values because it's used in console commands
@@ -63,7 +63,7 @@ class Validator
     /**
      * Validates that the given $slug is a valid string for a book slug.
      */
-    public static function validateBookSlug($slug)
+    public static function validateBookSlug(string $slug): string
     {
         if (!preg_match('/^[a-zA-Z0-9\-]+$/', $slug)) {
             // it throws an exception for invalid values because it's used in console commands
@@ -78,7 +78,7 @@ class Validator
     /**
      * Validates that the book represented by the given $slug exists in $dir directory.
      */
-    public function validateBookDir($slug, $baseDir)
+    public function validateBookDir(string $slug, string $baseDir): string
     {
         $attempts = 6;
         $bookDir = $baseDir.'/'.$slug;
@@ -127,7 +127,7 @@ class Validator
     /**
      * Validates that the given $slug is a valid string for a edition slug.
      */
-    public static function validateEditionSlug($slug)
+    public static function validateEditionSlug(string $slug): string
     {
         if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $slug)) {
             throw new InvalidArgumentException(
@@ -141,7 +141,7 @@ class Validator
     /**
      * Validates that the given $edition is defined in the book configuration.
      */
-    public function validatePublishingEdition($edition)
+    public function validatePublishingEdition(string $edition): string
     {
         // if the book defines no edition, raise an exception
         if (count($this->app->book('editions') ?: array()) == 0) {
@@ -182,7 +182,7 @@ class Validator
      *
      * @throws \RuntimeException If there are too many failed attempts
      */
-    private function askForPublishingEdition()
+    private function askForPublishingEdition(): ?string
     {
         $attempts = 6;
         $bookDir = $this->app['publishing.dir.book'];

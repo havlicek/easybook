@@ -28,7 +28,7 @@ class BasePublisher implements PublisherInterface
         $this->app = $app;
     }
 
-    public function checkIfThisPublisherIsSupported()
+    public function checkIfThisPublisherIsSupported(): bool
     {
         return true;
     }
@@ -36,7 +36,7 @@ class BasePublisher implements PublisherInterface
     /**
      * It controls the book publishing workflow for this particular publisher.
      */
-    public function publishBook()
+    public function publishBook(): void
     {
         $this->loadContents();
         $this->parseContents();
@@ -50,7 +50,7 @@ class BasePublisher implements PublisherInterface
      * doesn't define its own content (such as the table of contents or the
      * cover) it loads the default content (if defined).
      */
-    protected function loadContents()
+    protected function loadContents(): void
     {
         foreach ($this->app->book('contents') as $itemConfig) {
             $item = $this->initializeItem($itemConfig);
@@ -86,7 +86,7 @@ class BasePublisher implements PublisherInterface
      *
      * @throws \RuntimeException If the content file doesn't exist or is not readable
      */
-    private function loadItemContent($contentFileName, $itemType)
+    private function loadItemContent(string $contentFileName, string $itemType): string
     {
         $contentFilePath = $this->app['publishing.dir.contents'].'/'.$contentFileName;
 
@@ -130,7 +130,7 @@ class BasePublisher implements PublisherInterface
      *
      * @return string The default content or an empty string if it doesn't exist
      */
-    private function loadDefaultItemContent($itemType)
+    private function loadDefaultItemContent(string $itemType): string
     {
         $contentFileName = $itemType.'.md.twig';
 
@@ -149,7 +149,7 @@ class BasePublisher implements PublisherInterface
      * events to allow plugins modify the content before and/or after
      * the transformation.
      */
-    public function parseContents()
+    public function parseContents(): void
     {
         $parsedItems = array();
 
@@ -190,7 +190,7 @@ class BasePublisher implements PublisherInterface
     /**
      * It creates the directory where the final book contents will be copied.
      */
-    protected function prepareOutputDir()
+    protected function prepareOutputDir(): void
     {
         $bookOutputDir = $this->app['publishing.dir.output']
             ?: $this->app['publishing.dir.book'].'/Output/'.$this->app['publishing.edition'];
@@ -205,7 +205,7 @@ class BasePublisher implements PublisherInterface
     /**
      * Decorates each book item with the appropriate Twig template.
      */
-    public function decorateContents()
+    public function decorateContents(): void
     {
         $decoratedItems = array();
 
@@ -245,7 +245,7 @@ class BasePublisher implements PublisherInterface
      *
      * @return array An array with all the configuration options and data for the item
      */
-    private function initializeItem($itemConfig)
+    private function initializeItem(array $itemConfig): array
     {
         $item = array();
 

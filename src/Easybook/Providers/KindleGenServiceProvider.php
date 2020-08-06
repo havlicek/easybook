@@ -16,7 +16,7 @@ use Pimple\ServiceProviderInterface;
 
 class KindleGenServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['kindlegen.path'] = null;
 

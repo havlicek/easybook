@@ -15,7 +15,7 @@ use Twig_Extension;
 use Twig_Function_Method;
 class TwigCssExtension extends Twig_Extension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return array(
             'lighten' => new Twig_Function_Method($this, 'lighten'),
@@ -38,7 +38,7 @@ class TwigCssExtension extends Twig_Extension
      *
      * @returns string The lightened color
      */
-    public function lighten($color, $percent)
+    public function lighten(string $color, string $percent): string
     {
         $percent = str_replace('%', '', $percent) / 100;
 
@@ -63,9 +63,9 @@ class TwigCssExtension extends Twig_Extension
      *
      * @returns string The darkened color
      */
-    public function darken($color, $percent)
+    public function darken(string $color, string $percent): string
     {
-        return $this->lighten($color, -$percent);
+        return $this->lighten($color, '-' . $percent);
     }
 
     /*
@@ -75,7 +75,7 @@ class TwigCssExtension extends Twig_Extension
      * @param string $opacity The opacity of the result color (value ranges from 0.0 to 1.0)
      *
      */
-    public function fade($hex, $opacity)
+    public function fade(string $hex, string $opacity): string
     {
         $rgb = $this->hex2rgb($hex);
 
@@ -89,7 +89,7 @@ class TwigCssExtension extends Twig_Extension
      * Examples: css_add('250px', 30) => returns '280px'
      *           css_add('8in', 12)   => returns '20in'
      */
-    public function cssAdd($length, $factor)
+    public function cssAdd(string $length, int $factor): string
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
@@ -107,7 +107,7 @@ class TwigCssExtension extends Twig_Extension
      * Examples: css_substract('250px', 50) => returns '200px'
      *           css_substract('8in', 2)   => returns '6in'
      */
-    public function cssSubstract($length, $factor)
+    public function cssSubstract(string $length, int $factor): string
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
@@ -125,7 +125,7 @@ class TwigCssExtension extends Twig_Extension
      * Examples: css_multiply('250px', 2) => returns '500px'
      *           css_multiply('8in', 4)   => returns '32in'
      */
-    public function cssMultiply($length, $factor)
+    public function cssMultiply(string $length, int $factor): string
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
@@ -143,7 +143,7 @@ class TwigCssExtension extends Twig_Extension
      * Examples: css_divide('250px', 2) => returns '125px'
      *           css_divide('80in', 4)  => returns '20in'
      */
-    public function cssDivide($length, $factor)
+    public function cssDivide(string $length, int $factor): string
     {
         if (0 == $factor) {
             return 0;
@@ -168,7 +168,7 @@ class TwigCssExtension extends Twig_Extension
      * @param  string $hex
      * @return array
      */
-    private function hex2rgb($hex)
+    private function hex2rgb(string $hex): array
     {
         $hex = str_replace('#', '', $hex);
 
@@ -198,7 +198,7 @@ class TwigCssExtension extends Twig_Extension
      * @param  array $rgb
      * @return string
      */
-    private function rgb2hex(array $rgb)
+    private function rgb2hex(array $rgb): string
     {
         return sprintf('#%02s%02s%02s', dechex($rgb[0]), dechex($rgb[1]), dechex($rgb[2]));
     }
@@ -210,7 +210,7 @@ class TwigCssExtension extends Twig_Extension
      * @param  array $rgb
      * @return array
      */
-    private function rgb2hsl(array $rgb)
+    private function rgb2hsl(array $rgb): array
     {
         list($r, $g, $b) = $rgb;
         $r /= 255;
@@ -253,7 +253,7 @@ class TwigCssExtension extends Twig_Extension
      * @param  array $hsl
      * @return array
      */
-    private function hsl2rgb(array $hsl)
+    private function hsl2rgb(array $hsl): array
     {
         list($h, $s, $l) = $hsl;
 
@@ -282,7 +282,7 @@ class TwigCssExtension extends Twig_Extension
         );
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'twig_css_extension';
     }

@@ -18,7 +18,7 @@ namespace Easybook\Publishers;
  */
 class HtmlPublisher extends BasePublisher
 {
-    public function assembleBook()
+    public function assembleBook(): void
     {
         // generate easybook CSS file
         if ($this->app->edition('include_styles')) {

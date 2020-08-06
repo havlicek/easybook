@@ -42,7 +42,7 @@ class BookConfigurator
      * @return array The complete book configuration resulted from merging
      *               all the different configuration sources
      */
-    public function loadBookConfiguration($bookDir = null, $configurationViaCommand = '')
+    public function loadBookConfiguration(string $bookDir = null, string $configurationViaCommand = ''): array
     {
         $configurationViaCommand = $this->loadCommandConfiguration($configurationViaCommand);
         $configurationViaFile = $this->loadBookFileConfiguration($bookDir);
@@ -65,7 +65,7 @@ class BookConfigurator
      *
      * @return array The loaded configuration (or an empty array if no configuration is set)
      */
-    public function loadCommandConfiguration($configurationJsonString)
+    public function loadCommandConfiguration(string $configurationJsonString): array
     {
         $config = json_decode($configurationJsonString, true, 512, JSON_THROW_ON_ERROR);
 
@@ -81,7 +81,7 @@ class BookConfigurator
      *
      * @throws \RuntimeException If no config.yml is present.
      */
-    public function loadBookFileConfiguration($bookDir)
+    public function loadBookFileConfiguration(string $bookDir): array
     {
         $bookConfigFile = $bookDir.'/config.yml';
 
@@ -106,7 +106,7 @@ class BookConfigurator
      *
      * @return array The loaded configuration.
      */
-    public function loadDefaultBookConfiguration()
+    public function loadDefaultBookConfiguration(): array
     {
         $config = Yaml::parse(__DIR__.'/DefaultConfigurations/book.yml');
 
@@ -119,7 +119,7 @@ class BookConfigurator
      *
      * @return array The complete book configuration (this method only fills-in the edition configuration)
      */
-    public function loadEditionConfiguration()
+    public function loadEditionConfiguration(): array
     {
         $bookConfiguration = $this->app['publishing.book.config'];
         $edition = $this->app['publishing.edition'];
@@ -153,7 +153,7 @@ class BookConfigurator
      *
      * @throws \UnexpectedValueException If the edition extends an undefined edition.
      */
-    public function loadParentEditionConfiguration()
+    public function loadParentEditionConfiguration(): array
     {
         $bookEditions = $this->app->book('editions');
         $edition = $this->app['publishing.edition'];
@@ -184,7 +184,7 @@ class BookConfigurator
      *
      * @return array The loaded configuration.
      */
-    public function loadDefaultEditionConfiguration()
+    public function loadDefaultEditionConfiguration(): array
     {
         $config = Yaml::parse(__DIR__.'/DefaultConfigurations/edition.yml');
 
@@ -199,7 +199,7 @@ class BookConfigurator
      *
      * @return array The complete book configuration with all its dynamic/variable values resolved
      */
-    public function processConfigurationValues()
+    public function processConfigurationValues(): array
     {
         $bookConfig = $this->app['publishing.book.config'];
         $editionConfig = $bookConfig['book']['editions'][$this->app['publishing.edition']];

@@ -21,11 +21,11 @@ interface PublisherInterface
      *
      * @return bool True if this publisher works in this system
      */
-    public function checkIfThisPublisherIsSupported();
+    public function checkIfThisPublisherIsSupported(): bool;
 
     /**
      * It defines the complete workflow followed to publish a book (load its
      * contents, transform them into HTML files, etc.).
      */
-    public function publishBook();
+    public function publishBook(): void;
 }

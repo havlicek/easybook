@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class EasybookVersionCommand extends BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDefinition(array())

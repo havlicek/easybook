@@ -16,7 +16,7 @@ class BookGenerator extends Generator
      *
      * @param array $configuration
      */
-    public function setConfiguration(array $configuration)
+    public function setConfiguration(array $configuration): void
     {
         $this->configuration = $configuration;
     }
@@ -26,7 +26,7 @@ class BookGenerator extends Generator
      *
      * @param Filesystem $filesystem
      */
-    public function setFilesystem(Filesystem $filesystem)
+    public function setFilesystem(Filesystem $filesystem): void
     {
         $this->filesystem = $filesystem;
     }
@@ -36,7 +36,7 @@ class BookGenerator extends Generator
      *
      * @param string $skeletonDirectory
      */
-    public function setSkeletonDirectory($skeletonDirectory)
+    public function setSkeletonDirectory($skeletonDirectory): void
     {
         $this->skeletonDirectory = $skeletonDirectory;
     }
@@ -46,7 +46,7 @@ class BookGenerator extends Generator
      *
      * @param string $bookDirectory
      */
-    public function setBookDirectory($bookDirectory)
+    public function setBookDirectory($bookDirectory): void
     {
         // check if `$bookDir` directory is available
         // if not, create a unique directory name appending a numeric suffix
@@ -64,7 +64,7 @@ class BookGenerator extends Generator
      *
      * @return string The book directory
      */
-    public function getBookDirectory()
+    public function getBookDirectory(): string
     {
         return $this->bookDirectory;
     }
@@ -73,7 +73,7 @@ class BookGenerator extends Generator
      * Generates the hierarchy of files and directories needed
      * to publish a book.
      */
-    public function generate()
+    public function generate(): void
     {
         $this->filesystem->mkdir(array(
             $this->bookDirectory.'/Contents/images',

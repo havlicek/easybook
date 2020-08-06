@@ -28,7 +28,7 @@ class Epub2Publisher extends HtmlPublisher
     // 'cover' is a very special content for epub books
     protected $excludedElements = array('cover', 'lot', 'lof', 'toc');
 
-    public function loadContents()
+    public function loadContents(): void
     {
         // strip excluded elements before loading book contents
         $contents = array();
@@ -47,7 +47,7 @@ class Epub2Publisher extends HtmlPublisher
      * Instead of using the regular Twig templates based on the item type (e.g. chapter),
      * ePub books items are decorated afterwards with some special Twig templates.
      */
-    public function decorateContents()
+    public function decorateContents(): void
     {
         $decoratedItems = array();
 
@@ -70,7 +70,7 @@ class Epub2Publisher extends HtmlPublisher
         $this->app['publishing.items'] = $decoratedItems;
     }
 
-    public function assembleBook()
+    public function assembleBook(): void
     {
         $bookTmpDir = $this->prepareBookTemporaryDirectory();
 
@@ -171,7 +171,7 @@ class Epub2Publisher extends HtmlPublisher
      *
      * @return string The absolute path of the directory created.
      */
-    private function prepareBookTemporaryDirectory()
+    private function prepareBookTemporaryDirectory(): string
     {
         $bookDir = $this->app['app.dir.cache'].'/'
                    .uniqid($this->app['publishing.book.slug']);
@@ -200,7 +200,7 @@ class Epub2Publisher extends HtmlPublisher
      *
      * @throws \RuntimeException If the $targetDir doesn't exist.
      */
-    private function prepareBookImages($targetDir)
+    private function prepareBookImages(string $targetDir): array
     {
         if (!file_exists($targetDir)) {
             throw new RuntimeException(sprintf(
@@ -243,7 +243,7 @@ class Epub2Publisher extends HtmlPublisher
      * @return array|null Book cover image data or null if the book doesn't
      *                    include a cover image.
      */
-    private function prepareBookCoverImage($targetDir)
+    private function prepareBookCoverImage(string $targetDir): ?array
     {
         $cover = null;
 
@@ -275,7 +275,7 @@ class Epub2Publisher extends HtmlPublisher
      *
      * @return array Font data needed to create the book manifest.
      */
-    private function prepareBookFonts($targetDir)
+    private function prepareBookFonts(string $targetDir): array
     {
         if (!file_exists($targetDir)) {
             throw new RuntimeException(sprintf(
@@ -322,7 +322,7 @@ class Epub2Publisher extends HtmlPublisher
      *
      * @return array The book items with their new 'page_name' property.
      */
-    private function normalizePageNames($items)
+    private function normalizePageNames(array $items): array
     {
         $itemsWithNormalizedPageNames = array();
 
@@ -358,19 +358,21 @@ class Epub2Publisher extends HtmlPublisher
      * @param  string $directory  Book contents directory
      * @param  string $zip_file   The path of the generated ZIP file
      */
-    private function zipBookContents($directory, $zip_file)
+    private function zipBookContents(string $directory, string $zip_file): void
     {
         // check if the operating system supports the 'zip' command
         $process = new Process('zip');
         $process->run();
 
         if ($process->isSuccessful()) {
-            return $this->zipBookContentsNatively($directory, $zip_file);
+            $this->zipBookContentsNatively($directory, $zip_file);
+            return;
         }
 
         // fallback to the 'zip' PHP extension if the 'zip' command is not available
         if (extension_loaded('zip')) {
-            return $this->zipBookContentsWithPhpExtension($directory, $zip_file);
+            $this->zipBookContentsWithPhpExtension($directory, $zip_file);
+            return;
         }
 
         throw new RuntimeException(
@@ -393,7 +395,7 @@ class Epub2Publisher extends HtmlPublisher
      * @param string $directory Book contents directory
      * @param string $zip_file  The path of the generated ZIP file
      */
-    private function zipBookContentsNatively($directory, $zip_file)
+    private function zipBookContentsNatively($directory, $zip_file): void
     {
         $command = sprintf(
             'cd %s && zip -X0 %s mimetype && zip -rX9 %s * -x mimetype',
@@ -421,7 +423,7 @@ class Epub2Publisher extends HtmlPublisher
      * @param string $directory Book contents directory
      * @param string $zip_file  The path of the generated ZIP file
      */
-    private function zipBookContentsWithPhpExtension($directory, $zip_file)
+    private function zipBookContentsWithPhpExtension($directory, $zip_file): void
     {
         Toolkit::zip($directory, $zip_file);
     }
@@ -444,7 +446,7 @@ class Epub2Publisher extends HtmlPublisher
      * @param string $chunksDir The directory where the book's HTML page/chunks
      *                          are stored
      */
-    private function fixInternalLinks($chunksDir)
+    private function fixInternalLinks(string $chunksDir): void
     {
         $generatedChunks = $this->app['finder']->files()->name('*.html')->in($chunksDir);
 

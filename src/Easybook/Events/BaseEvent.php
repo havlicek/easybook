@@ -33,7 +33,7 @@ class BaseEvent extends Event
      *
      * @return array The item data
      */
-    public function getItem()
+    public function getItem(): array
     {
         return $this->app['publishing.active_item'];
     }
@@ -44,7 +44,7 @@ class BaseEvent extends Event
      *
      * @param array $item The item that replaces the old item data
      */
-    public function setItem($item)
+    public function setItem(array $item): void
     {
         $this->app['publishing.active_item'] = $item;
     }

@@ -24,7 +24,7 @@ use Easybook\Util\Validator;
 
 class BookPublishCommand extends BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('publish')
@@ -114,7 +114,7 @@ class BookPublishCommand extends BaseCommand
      *
      * @throws \RuntimeException if any script execution produces an error.
      */
-    private function runScripts($scripts)
+    private function runScripts($scripts): void
     {
         if (null === $scripts) {
             return;
@@ -145,7 +145,7 @@ class BookPublishCommand extends BaseCommand
         }
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln($this->app['app.signature']);
 

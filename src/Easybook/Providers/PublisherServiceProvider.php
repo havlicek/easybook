@@ -22,7 +22,7 @@ use Easybook\Publishers\PdfPublisher;
 
 class PublisherServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $app): void
     {
         $app['publisher'] = function ($app) {
             $outputFormat = $app->edition('format');
