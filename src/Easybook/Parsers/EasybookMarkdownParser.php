@@ -63,7 +63,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      *
      * @return string The result of deleting the tabs from the original text
      */
-    public function detab($text): string
+    public function detab($text)
     {
         return str_replace("\t", str_repeat(' ', $this->tab_width), $text);
     }
@@ -72,7 +72,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      * Improves the performance of the original method. Copied from:
      * http://github.com/KnpLabs/KnpMarkdownBundle/blob/master/Parser/MarkdownParser.php.
      */
-    public function _initDetab(): void
+    public function _initDetab()
     {
         return;
     }
@@ -92,7 +92,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      * @return string The original content with the Markdown headings replaced
      *                by the HTML headings with 'id' attributes
      */
-    public function doHeaders(string $text): string
+    public function doHeaders($text)
     {
         #
     # Redefined to add id attribute support.
@@ -147,7 +147,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      *             will only be displayed when you have hacked easybook internals
      *             and have maintained the Setext-style headers.
      */
-    public function _doHeaders_callback_setext(array $matches): string
+    public function _doHeaders_callback_setext($matches)
     {
         if ($matches[3] == '-' && preg_match('{^- }', $matches[1])) {
             return $matches[0];
@@ -181,7 +181,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      *
      * @return string The HTML contents of the parsed heading
      */
-    public function _doHeaders_callback_atx(array $matches): string
+    public function _doHeaders_callback_atx($matches)
     {
         $level = strlen($matches[1]);
         $title = $this->runSpanGamut($matches[2]);
@@ -220,7 +220,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      *
      * @return string The HTML string that represents the original Markdown image element
      */
-    public function _doImages_reference_callback(array $matches): string
+    public function _doImages_reference_callback($matches)
     {
         $whole_match = $matches[1];
         $alt_text = $matches[2];
@@ -273,7 +273,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      *
      * @return string The HTML string that represents the original Markdown image element
      */
-    public function _doImages_inline_callback(array $matches): string
+    public function _doImages_inline_callback($matches)
     {
         $alt_text = $matches[2];
         $url = $matches[3] == '' ? $matches[4] : $matches[3];
@@ -398,7 +398,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      * of the PHP Markdown library. This method overrides the original method
      * to do nothing with these code blocks.
      */
-    public function doFencedCodeBlocks($text): string
+    public function doFencedCodeBlocks($text)
     {
         return $text;
     }
