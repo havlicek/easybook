@@ -42,11 +42,11 @@ class BookConfigurationTest extends TestCase
         $configurator = $this->getMock('Easybook\Configurator\BookConfigurator', array('loadBookFileConfiguration'), array($app));
         $configurator->expects($this->once())
             ->method('loadBookFileConfiguration')
-            ->will($this->returnValue(Yaml::parse($bookConfiguration) ?: array()))
+            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: array()))
         ;
 
         $configuration = $configurator->loadBookConfiguration(null, $commandConfiguration);
-        $expectedConfiguration = Yaml::parse($expectedConfiguration);
+        $expectedConfiguration = Yaml::parseFile($expectedConfiguration);
 
         $this->assertEquals($expectedConfiguration, $configuration, $testMessage);
     }
@@ -61,7 +61,7 @@ class BookConfigurationTest extends TestCase
         $configurator = $this->getMock('Easybook\Configurator\BookConfigurator', array('loadBookFileConfiguration'), array($app));
         $configurator->expects($this->once())
             ->method('loadBookFileConfiguration')
-            ->will($this->returnValue(Yaml::parse($bookConfiguration) ?: array()))
+            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: array()))
         ;
 
         $configuration = $configurator->loadBookConfiguration(null, $commandConfiguration);
@@ -69,7 +69,7 @@ class BookConfigurationTest extends TestCase
         $app['publishing.book.config'] = $configuration;
         $configuration = $configurator->processConfigurationValues();
 
-        $expectedConfiguration = Yaml::parse($expectedConfiguration);
+        $expectedConfiguration = Yaml::parseFile($expectedConfiguration);
         $this->assertEquals($expectedConfiguration, $configuration, $testMessage);
     }
 

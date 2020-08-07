@@ -247,7 +247,7 @@ class ApplicationTest extends TestCase
                 ),
             ));
 
-            $titles = Yaml::parse($file->getPathname());
+            $titles = Yaml::parseFile($file->getPathname());
             foreach ($titles['title'] as $key => $expectedValue) {
                 $this->assertEquals($expectedValue, $app->getTitle($key));
             }
@@ -285,7 +285,7 @@ class ApplicationTest extends TestCase
                 ),
             ));
 
-            $labels = Yaml::parse($file->getPathname());
+            $labels = Yaml::parseFile($file->getPathname());
             foreach ($labels['label'] as $key => $value) {
                 // some labels (chapter and appendix) are arrays instead of strings
                 if (is_array($value)) {

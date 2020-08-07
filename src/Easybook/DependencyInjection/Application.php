@@ -144,13 +144,13 @@ SIGNATURE;
 
         // -- labels ---------------------------------------------------------
         $this['labels'] = function () use ($app) {
-            $labels = Yaml::parse(
+            $labels = Yaml::parseFile(
                 $app['app.dir.translations'].'/labels.'.$app->book('language').'.yml'
             );
 
             // books can define their own labels files
             if (null !== $customLabelsFile = $app->getCustomLabelsFile()) {
-                $customLabels = Yaml::parse($customLabelsFile);
+                $customLabels = Yaml::parseFile($customLabelsFile);
 
                 return Toolkit::array_deep_merge_and_replace($labels, $customLabels);
             }
@@ -160,13 +160,13 @@ SIGNATURE;
 
         // -- titles ----------------------------------------------------------
         $this['titles'] = function () use ($app) {
-            $titles = Yaml::parse(
+            $titles = Yaml::parseFile(
                 $app['app.dir.translations'].'/titles.'.$app->book('language').'.yml'
             );
 
             // books can define their own titles files
             if (null !== $customTitlesFile = $app->getCustomTitlesFile()) {
-                $customTitles = Yaml::parse($customTitlesFile);
+                $customTitles = Yaml::parseFile($customTitlesFile);
 
                 return Toolkit::array_deep_merge_and_replace($titles, $customTitles);
             }
@@ -390,11 +390,11 @@ SIGNATURE;
      */
     public function getCustomTemplate(string $templateName): ?string
     {
-        $paths = array(
+        $paths = [
             $this['publishing.dir.templates'].'/'.$this['publishing.edition'],
             $this['publishing.dir.templates'].'/'.$this->edition('format'),
             $this['publishing.dir.templates'],
-        );
+        ];
 
         return $this->getFirstExistingFile($templateName, $paths);
     }

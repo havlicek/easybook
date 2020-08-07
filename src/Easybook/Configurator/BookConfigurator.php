@@ -11,10 +11,11 @@
 
 namespace Easybook\Configurator;
 
-use RuntimeException;
-use UnexpectedValueException;
-use Symfony\Component\Yaml\Yaml;
 use Easybook\DependencyInjection\Application;
+use JsonException;
+use RuntimeException;
+use Symfony\Component\Yaml\Yaml;
+use UnexpectedValueException;
 
 /**
  * Handles book and edition configurations.
@@ -67,9 +68,13 @@ class BookConfigurator
      */
     public function loadCommandConfiguration(string $configurationJsonString): array
     {
-        $config = json_decode($configurationJsonString, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $config = json_decode($configurationJsonString, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            return [];
+        }
 
-        return empty($config) ? array() : $config;
+        return empty($config) ? [] : $config;
     }
 
     /**
@@ -95,9 +100,9 @@ class BookConfigurator
             ));
         }
 
-        $config = Yaml::parse($bookConfigFile);
+        $config = Yaml::parseFile($bookConfigFile);
 
-        return empty($config) ? array() : $config;
+        return empty($config) ? [] : $config;
     }
 
     /**
@@ -108,7 +113,7 @@ class BookConfigurator
      */
     public function loadDefaultBookConfiguration(): array
     {
-        $config = Yaml::parse(__DIR__.'/DefaultConfigurations/book.yml');
+        $config = Yaml::parseFile(__DIR__.'/DefaultConfigurations/book.yml');
 
         return empty($config) ? array() : $config;
     }
@@ -186,7 +191,7 @@ class BookConfigurator
      */
     public function loadDefaultEditionConfiguration(): array
     {
-        $config = Yaml::parse(__DIR__.'/DefaultConfigurations/edition.yml');
+        $config = Yaml::parseFile(__DIR__.'/DefaultConfigurations/edition.yml');
 
         return $config['edition'] ?: array();
     }
@@ -214,6 +219,7 @@ class BookConfigurator
             } elseif (is_array($value)) {
                 foreach ($value as $subkey => $subvalue) {
                     if (true !== $subvalue && false !== $subvalue && null !== $subvalue && !is_array($subvalue)) {
+                        $subvalue = !is_string($subvalue) ? (string) $subvalue : $subvalue;
                         $bookConfig['book'][$key][$subkey] = $app->renderString($subvalue, $twig_variables);
                     }
                 }
