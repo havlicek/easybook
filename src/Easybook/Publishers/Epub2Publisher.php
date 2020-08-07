@@ -85,7 +85,7 @@ class Epub2Publisher extends HtmlPublisher
 
         // generate custom CSS file
         $customCss = $this->app->getCustomTemplate('style.css');
-        $hasCustomCss = file_exists($customCss);
+        $hasCustomCss = $customCss !== null && file_exists($customCss);
         if ($hasCustomCss) {
             $this->app['filesystem']->copy(
                 $customCss,
