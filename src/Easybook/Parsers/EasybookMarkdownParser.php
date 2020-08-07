@@ -29,9 +29,9 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->app['publishing.active_item.toc'] = array();
+        $this->app['publishing.active_item.toc'] = [];
 
-        $this->admonitionTypes = array(
+        $this->admonitionTypes = [
             'A' => 'aside',
             'N' => 'note',
             'W' => 'warning',
@@ -40,15 +40,15 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
             'I' => 'information',
             'Q' => 'question',
             'D' => 'discussion',
-        );
+        ];
 
-        $this->span_gamut += array(
+        $this->span_gamut += [
             'doPageBreaks' => 20,
-        );
+        ];
 
-        $this->block_gamut += array(
+        $this->block_gamut += [
             'doAdmonitions' => 55,
-        );
+        ];
 
         parent::__construct();
     }
@@ -110,7 +110,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
                 (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?    # $2: Id attribute
                 [ ]*\n(=+|-+)[ ]*\n+                # $3: Header footer
             }mx',
-            array(&$this, '_doHeaders_callback_setext'), $text);
+            [&$this, '_doHeaders_callback_setext'], $text);
 
         # atx-style headers:
         #   # Header 1        {#header1}
@@ -129,7 +129,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
                 [ ]*
                 \n+
             }xm',
-            array(&$this, '_doHeaders_callback_atx'), $text);
+            [&$this, '_doHeaders_callback_atx'], $text);
 
         return $text;
     }
@@ -149,7 +149,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
      */
     public function _doHeaders_callback_setext($matches)
     {
-        if ($matches[3] == '-' && preg_match('{^- }', $matches[1])) {
+        if ($matches[3] === '-' && preg_match('{^- }', $matches[1])) {
             return $matches[0];
         }
         $level = $matches[3]{0}
@@ -157,18 +157,18 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
 
         # added by easybook
         $title = $this->runSpanGamut($matches[1]);
-        $id = isset($matches[2]) ? $matches[2] : '';
+        $id = $matches[2] ?? '';
         if ('' === $id || null === $id) {
             $id = $this->app->slugifyUniquely($this->unhash($title));
         }
 
         $block = "<h$level id=\"$id\">".$title."</h$level>";
 
-        $this->app->append('publishing.active_item.toc', array(
+        $this->app->append('publishing.active_item.toc', [
             'level' => $level,
             'title' => $this->unhash($title),
             'slug' => $id,
-        ));
+        ]);
 
         return "\n".$this->hashBlock($block)."\n\n";
     }
@@ -185,18 +185,18 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
     {
         $level = strlen($matches[1]);
         $title = $this->runSpanGamut($matches[2]);
-        $id = isset($matches[3]) ? $matches[3] : '';
+        $id = $matches[3] ?? '';
         if ('' === $id || null === $id) {
             $id = $this->app->slugifyUniquely($this->unhash($title));
         }
 
         $block = "<h$level id=\"$id\">".$title."</h$level>";
 
-        $this->app->append('publishing.active_item.toc', array(
+        $this->app->append('publishing.active_item.toc', [
             'level' => $level,
             'title' => $this->unhash($title),
             'slug' => $id,
-        ));
+        ]);
 
         return "\n".$this->hashBlock($block)."\n\n";
     }
@@ -227,17 +227,17 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
         $link_id = strtolower($matches[3]);
 
         $align = '';
-        if (' ' == substr($alt_text, 0, 1)) {
-            if (' ' == substr($alt_text, -1)) {
+        if (strpos($alt_text, ' ') === 0) {
+            if (substr($alt_text, -1) === ' ') {
                 $align = 'center';
             } else {
                 $align = 'left';
             }
-        } elseif (' ' == substr($alt_text, -1)) {
+        } elseif (substr($alt_text, -1) === ' ') {
             $align = 'right';
         }
 
-        if ($link_id == '') {
+        if ($link_id === '') {
             $link_id = strtolower($alt_text); # for shortcut links like ![this][].
         }
 
@@ -252,7 +252,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
             }
             $result .= $this->empty_element_suffix;
 
-            if ('' != $align) {
+            if ('' !== $align) {
                 $result = sprintf('<div class="%s">%s</div>', $align, $result);
             }
 
@@ -276,17 +276,17 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
     public function _doImages_inline_callback($matches)
     {
         $alt_text = $matches[2];
-        $url = $matches[3] == '' ? $matches[4] : $matches[3];
+        $url = $matches[3] === '' ? $matches[4] : $matches[3];
         $title = &$matches[7];
 
         $align = '';
-        if (' ' == substr($alt_text, 0, 1)) {
-            if (' ' == substr($alt_text, -1)) {
+        if (strpos($alt_text, ' ') === 0) {
+            if (substr($alt_text, -1) === ' ') {
                 $align = 'center';
             } else {
                 $align = 'left';
             }
-        } elseif (' ' == substr($alt_text, -1)) {
+        } elseif (substr($alt_text, -1) === ' ') {
             $align = 'right';
         }
 
@@ -300,7 +300,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
         }
         $result .= $this->empty_element_suffix;
 
-        if ('' != $align) {
+        if ('' !== $align) {
             $result = sprintf('<div class="%s">%s</div>', $align, $result);
         }
 
@@ -352,7 +352,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
                 (?>^[ ]*(['.implode('', array_keys($this->admonitionTypes)).'])>[ ]?.+\n)+
             )
             /xm',
-            array(&$this, '_doAdmonitions_callback'),
+            [&$this, '_doAdmonitions_callback'],
             $text
         );
 
@@ -378,7 +378,7 @@ class EasybookMarkdownParser extends ExtraMarkdownParser implements ParserInterf
         # so we need to fix that:
         $content = preg_replace_callback(
             '{(\s*<pre>.+?</pre>)}sx',
-            function ($submatches) {
+            static function ($submatches) {
                 $pre = $submatches[1];
                 $pre = preg_replace('/^  /m', '', $pre);
 
