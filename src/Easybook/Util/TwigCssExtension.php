@@ -11,22 +11,22 @@
 
 namespace Easybook\Util;
 
+use Twig\TwigFunction;
 use Twig_Extension;
-use Twig_Function_Method;
+
 class TwigCssExtension extends Twig_Extension
 {
     public function getFunctions(): array
     {
-        return array(
-            'lighten' => new Twig_Function_Method($this, 'lighten'),
-            'darken' => new Twig_Function_Method($this, 'darken'),
-            'fade' => new Twig_Function_Method($this, 'fade'),
-            'css_add' => new Twig_Function_Method($this, 'cssAdd'),
-            'css_substract' => new Twig_Function_Method($this, 'cssSubstract'),
-            'css_multiply' => new Twig_Function_Method($this, 'cssMultiply'),
-            'css_divide' => new Twig_Function_Method($this, 'cssDivide'),
-
-        );
+        return [
+            new TwigFunction('lighten', [$this, 'lighten']),
+            new TwigFunction('darken', [$this, 'darken']),
+            new TwigFunction('fade', [$this, 'fade']),
+            new TwigFunction('css_add', [$this, 'cssAdd']),
+            new TwigFunction('css_substract', [$this, 'cssSubstract']),
+            new TwigFunction('css_multiply', [$this, 'cssMultiply']),
+            new TwigFunction('css_divide', [$this, 'cssDivide']),
+        ];
     }
 
     /*
@@ -44,7 +44,7 @@ class TwigCssExtension extends Twig_Extension
 
         $rgb = $this->hex2rgb($color);
         $hsl = $this->rgb2hsl($rgb);
-        list($h, $s, $l) = $hsl;
+        [$h, $s, $l] = $hsl;
 
         $l = min(1, max(0, $l + $percent));
 
@@ -93,8 +93,8 @@ class TwigCssExtension extends Twig_Extension
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
-            function ($matches) use ($factor) {
-                $unit = isset($matches['unit']) ? $matches['unit'] : 'px';
+            static function ($matches) use ($factor) {
+                $unit = $matches['unit'] ?? 'px';
 
                 return ($matches['value'] + $factor).$unit;
             },
@@ -111,8 +111,8 @@ class TwigCssExtension extends Twig_Extension
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
-            function ($matches) use ($factor) {
-                $unit = isset($matches['unit']) ? $matches['unit'] : 'px';
+            static function ($matches) use ($factor) {
+                $unit = $matches['unit'] ?? 'px';
 
                 return ($matches['value'] - $factor).$unit;
             },
@@ -129,7 +129,7 @@ class TwigCssExtension extends Twig_Extension
     {
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
-            function ($matches) use ($factor) {
+            static function ($matches) use ($factor) {
                 $unit = isset($matches['unit']) ? $matches['unit'] : 'px';
 
                 return ($matches['value'] * $factor).$unit;
@@ -145,13 +145,13 @@ class TwigCssExtension extends Twig_Extension
      */
     public function cssDivide(string $length, int $factor): string
     {
-        if (0 == $factor) {
-            return 0;
+        if (0 === $factor) {
+            return '0';
         }
 
         return preg_replace_callback(
             '/(?<value>[\d\.]*)(?<unit>[a-z]{2})/i',
-            function ($matches) use ($factor) {
+            static function ($matches) use ($factor) {
                 $unit = isset($matches['unit']) ? $matches['unit'] : 'px';
 
                 return ($matches['value'] / $factor).$unit;
@@ -173,7 +173,7 @@ class TwigCssExtension extends Twig_Extension
         $hex = str_replace('#', '', $hex);
 
         // expand shorthand notation #36A -> #3366AA
-        if (3 == strlen($hex)) {
+        if (3 === strlen($hex)) {
             $hex = $hex{0}
             .$hex{0}
             .$hex{1}
@@ -212,7 +212,7 @@ class TwigCssExtension extends Twig_Extension
      */
     private function rgb2hsl(array $rgb): array
     {
-        list($r, $g, $b) = $rgb;
+        [$r, $g, $b] = $rgb;
         $r /= 255;
         $g /= 255;
         $b /= 255;
@@ -231,13 +231,13 @@ class TwigCssExtension extends Twig_Extension
         $h = 0;
 
         if ($delta > 0) {
-            if ($max == $r && $max != $g) {
+            if ($max === $r && $max !== $g) {
                 $h += ($g - $b) / $delta;
             }
-            if ($max == $g && $max != $b) {
+            if ($max === $g && $max !== $b) {
                 $h += (2 + ($b - $r) / $delta);
             }
-            if ($max == $b && $max != $r) {
+            if ($max === $b && $max !== $r) {
                 $h += (4 + ($r - $g) / $delta);
             }
             $h /= 6;
@@ -255,12 +255,12 @@ class TwigCssExtension extends Twig_Extension
      */
     private function hsl2rgb(array $hsl): array
     {
-        list($h, $s, $l) = $hsl;
+        [$h, $s, $l] = $hsl;
 
         $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l * $s;
         $m1 = $l * 2 - $m2;
 
-        $hue = function ($base) use ($m1, $m2) {
+        $hue = static function ($base) use ($m1, $m2) {
             $base = ($base < 0) ? $base + 1 : (($base > 1) ? $base - 1 : $base);
             if ($base * 6 < 1) {
                 return $m1 + ($m2 - $m1) * $base * 6;
@@ -275,11 +275,11 @@ class TwigCssExtension extends Twig_Extension
             return $m1;
         };
 
-        return array(
+        return [
             $hue($h + 0.33333) * 255,
             $hue($h) * 255,
             $hue($h - 0.33333) * 255,
-        );
+        ];
     }
 
     public function getName(): string
