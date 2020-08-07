@@ -43,7 +43,7 @@ class PdfPublisher extends BasePublisher
         // remove the default 'cover' element to prevent
         // publishing a book with two covers
         if (null !== $this->getCustomCover()) {
-            $bookItems = array();
+            $bookItems = [];
 
             // remove any element of type 'cover' from the
             // publishing items
@@ -59,14 +59,14 @@ class PdfPublisher extends BasePublisher
 
     public function assembleBook(): void
     {
-        $tmpDir = $this->app['app.dir.cache'].'/'.uniqid('easybook_pdf_');
+        $tmpDir = $this->app['app.dir.cache'].'/'.uniqid('easybook_pdf_', true);
         $this->app['filesystem']->mkdir($tmpDir);
 
         // implode all the contents to create the whole book
         $htmlBookFilePath = $tmpDir.'/book.html';
         $this->app->render(
             'book.twig',
-            array('items' => $this->app['publishing.items']),
+            ['items' => $this->app['publishing.items']],
             $htmlBookFilePath
         );
 
@@ -79,7 +79,7 @@ class PdfPublisher extends BasePublisher
             $defaultStyles = $tmpDir.'/default_styles.css';
             $this->app->render(
                 '@theme/style.css.twig',
-                array('resources_dir' => $this->app['app.dir.resources'].'/'),
+                ['resources_dir' => $this->app['app.dir.resources'].'/'],
                 $defaultStyles
             );
 
@@ -91,7 +91,7 @@ class PdfPublisher extends BasePublisher
             $prince->addStyleSheet($customCss);
         }
 
-        $errorMessages = array();
+        $errorMessages = [];
         $pdfBookFilePath = $this->app['publishing.dir.output'].'/book.pdf';
         $prince->convert_file_to_file($htmlBookFilePath, $pdfBookFilePath, $errorMessages);
         $this->displayPdfConversionErrors($errorMessages);
@@ -205,11 +205,11 @@ class PdfPublisher extends BasePublisher
      */
     public function getCustomCover(string $coverFileName = 'cover.pdf'): ?string
     {
-        $paths = array(
+        $paths = [
             $this->app['publishing.dir.templates'].'/'.$this->app['publishing.edition'],
             $this->app['publishing.dir.templates'].'/pdf',
             $this->app['publishing.dir.templates'],
-        );
+        ];
 
         return $this->app->getFirstExistingFile($coverFileName, $paths);
     }

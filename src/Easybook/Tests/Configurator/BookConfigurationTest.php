@@ -42,7 +42,7 @@ class BookConfigurationTest extends TestCase
         $configurator = $this->getMock('Easybook\Configurator\BookConfigurator', array('loadBookFileConfiguration'), array($app));
         $configurator->expects($this->once())
             ->method('loadBookFileConfiguration')
-            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: array()))
+            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: []))
         ;
 
         $configuration = $configurator->loadBookConfiguration(null, $commandConfiguration);
@@ -61,7 +61,7 @@ class BookConfigurationTest extends TestCase
         $configurator = $this->getMock('Easybook\Configurator\BookConfigurator', array('loadBookFileConfiguration'), array($app));
         $configurator->expects($this->once())
             ->method('loadBookFileConfiguration')
-            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: array()))
+            ->will($this->returnValue(Yaml::parseFile($bookConfiguration) ?: []))
         ;
 
         $configuration = $configurator->loadBookConfiguration(null, $commandConfiguration);
@@ -91,7 +91,7 @@ class BookConfigurationTest extends TestCase
     public function getTests($dir)
     {
         $fixturesDir = realpath($dir);
-        $tests = array();
+        $tests = [];
 
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fixturesDir), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!preg_match('/\.test$/', $file)) {

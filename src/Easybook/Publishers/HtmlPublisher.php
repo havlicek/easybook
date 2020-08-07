@@ -24,7 +24,7 @@ class HtmlPublisher extends BasePublisher
         if ($this->app->edition('include_styles')) {
             $this->app->render(
                 '@theme/style.css.twig',
-                array('resources_dir' => $this->app['app.dir.resources'].'/'),
+                ['resources_dir' => $this->app['app.dir.resources'].'/'],
                 $this->app['publishing.dir.output'].'/css/easybook.css'
             );
         }
@@ -43,10 +43,10 @@ class HtmlPublisher extends BasePublisher
         // implode all the contents to create the whole book
         $this->app->render(
             'book.twig',
-            array(
+            [
                 'items' => $this->app['publishing.items'],
                 'has_custom_css' => $hasCustomCss,
-            ),
+            ],
             $this->app['publishing.dir.output'].'/book.html'
         );
 

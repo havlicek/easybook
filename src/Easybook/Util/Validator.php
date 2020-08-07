@@ -29,6 +29,9 @@ class Validator
 
     /**
      * Validates that the given $value is not an empty string.
+     * @param string $name
+     * @param string|null $value
+     * @return string
      */
     public static function validateNonEmptyString(string $name, ?string $value): string
     {
@@ -40,6 +43,10 @@ class Validator
         return $value;
     }
 
+    /**
+     * @param string $dir
+     * @return string
+     */
     public static function validateDirExistsAndWritable(string $dir): string
     {
         if (null === $dir || '' === trim($dir)) {
@@ -62,6 +69,8 @@ class Validator
 
     /**
      * Validates that the given $slug is a valid string for a book slug.
+     * @param string $slug
+     * @return string
      */
     public static function validateBookSlug(string $slug): string
     {
@@ -77,6 +86,9 @@ class Validator
 
     /**
      * Validates that the book represented by the given $slug exists in $dir directory.
+     * @param string $slug
+     * @param string $baseDir
+     * @return string
      */
     public function validateBookDir(string $slug, string $baseDir): string
     {
@@ -112,10 +124,10 @@ class Validator
 
             $slug = $this->app['console.dialog']->ask(
                 $this->app['console.output'],
-                array(
+                [
                     "\n Please, type the <info>slug</info> of the book (e.g. <comment>the-origin-of-species</comment>)\n"
                     .' > ',
-                )
+                ]
             );
 
             $bookDir = $baseDir.'/'.$slug;
@@ -126,6 +138,8 @@ class Validator
 
     /**
      * Validates that the given $slug is a valid string for a edition slug.
+     * @param string $slug
+     * @return string
      */
     public static function validateEditionSlug(string $slug): string
     {
@@ -140,11 +154,13 @@ class Validator
 
     /**
      * Validates that the given $edition is defined in the book configuration.
+     * @param string $edition
+     * @return string
      */
     public function validatePublishingEdition(string $edition): string
     {
         // if the book defines no edition, raise an exception
-        if (count($this->app->book('editions') ?: array()) == 0) {
+        if (count($this->app->book('editions') ?: []) == 0) {
             throw new RuntimeException(sprintf(
                 " ERROR: Book hasn't defined any edition.\n"
                 ."\n"
@@ -210,10 +226,10 @@ class Validator
 
             $edition = $this->app['console.dialog']->ask(
                 $this->app['console.output'],
-                array(
+                [
                     "\n Please, type the name of the <info>edition</info> to be published:\n"
                     .' > ',
-                )
+                ]
             );
         }
 

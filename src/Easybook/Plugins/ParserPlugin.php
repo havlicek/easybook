@@ -20,18 +20,18 @@ use Easybook\Events\ParseEvent;
  */
 class ParserPlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            Events::PRE_PARSE => array(
-                array('normalizeMarkdownHeaders', -1000),
-            ),
-            Events::POST_PARSE => array(
-                array('fixHtmlCode', -1000),
-                array('setItemTitle', -1000),
-                array('addSectionLabels', -1000),
-            ),
-        );
+        return [
+            Events::PRE_PARSE => [
+                ['normalizeMarkdownHeaders', -1000],
+            ],
+            Events::POST_PARSE => [
+                ['fixHtmlCode', -1000],
+                ['setItemTitle', -1000],
+                ['addSectionLabels', -1000],
+            ],
+        ];
     }
 
     /**
@@ -41,7 +41,7 @@ class ParserPlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function normalizeMarkdownHeaders(ParseEvent $event)
+    public function normalizeMarkdownHeaders(ParseEvent $event): void
     {
         $item = $event->getItem();
 
@@ -51,7 +51,7 @@ class ParserPlugin implements EventSubscriberInterface
                 (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?    # $2: Id attribute
                 [ ]*\n(=+|-+)[ ]*\n+                # $3: Header footer
             }Umx',
-            function ($matches) {
+            static function ($matches) {
                 $level = '=' === $matches[3]{0} ? 1 : 2;
 
                 return sprintf('%s %s%s', str_repeat('#', $level), $matches[1], $matches[2]);
@@ -69,7 +69,7 @@ class ParserPlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function fixHtmlCode(ParseEvent $event)
+    public function fixHtmlCode(ParseEvent $event): void
     {
         // replace <br> by <br/> (it causes problems for epub books)
         $item = $event->getItem();
@@ -83,7 +83,7 @@ class ParserPlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function setItemTitle(ParseEvent $event)
+    public function setItemTitle(ParseEvent $event): void
     {
         $item = $event->getItem();
 
@@ -91,7 +91,7 @@ class ParserPlugin implements EventSubscriberInterface
             $firstItemSection = $item['toc'][0];
 
             // the title of the content can only be a <h1> heading
-            if (1 == $firstItemSection['level']) {
+            if ($firstItemSection['level'] === 1) {
                 $item['slug'] = $firstItemSection['slug'];
                 $item['title'] = $firstItemSection['title'];
 
@@ -107,7 +107,7 @@ class ParserPlugin implements EventSubscriberInterface
 
         // ensure that every item has a title by using
         // the default title if necessary
-        if ('' == $item['title']) {
+        if ($item['title'] === '') {
             $item['title'] = $event->app->getTitle($item['config']['element']);
             $item['slug'] = $event->app->slugify($item['title']);
         }
@@ -120,17 +120,17 @@ class ParserPlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function addSectionLabels(ParseEvent $event)
+    public function addSectionLabels(ParseEvent $event): void
     {
         $item = $event->getItem();
 
         // special book items without a TOC don't need labels
-        if (0 == count($item['toc'])) {
+        if (count($item['toc']) === 0) {
             return;
         }
 
-        $counters = array(1 => $item['config']['number'], 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0);
-        $addSectionLabels = in_array($item['config']['element'], $event->app->edition('labels') ?: array());
+        $counters = [1 => $item['config']['number'], 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0];
+        $addSectionLabels = in_array($item['config']['element'], $event->app->edition('labels') ?: [], true);
 
         foreach ($item['toc'] as $key => $entry) {
             if ($addSectionLabels) {
@@ -145,14 +145,14 @@ class ParserPlugin implements EventSubscriberInterface
                     $counters[$i] = 0;
                 }
 
-                $parameters = array_merge($item['config'], array(
+                $parameters = array_merge($item['config'], [
                     'counters' => $counters,
                     'level' => $level,
-                ));
+                ]);
 
-                $label = $event->app->getLabel($item['config']['element'], array(
+                $label = $event->app->getLabel($item['config']['element'], [
                     'item' => $parameters,
-                ));
+                ]);
             } else {
                 $label = '';
             }

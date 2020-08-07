@@ -21,12 +21,12 @@ use Easybook\Events\BaseEvent;
  */
 class TimerPlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             Events::PRE_PUBLISH => 'registerPublicationStart',
             Events::POST_PUBLISH => 'registerPublicationEnd',
-        );
+        ];
     }
 
     /**
@@ -34,7 +34,7 @@ class TimerPlugin implements EventSubscriberInterface
      *
      * @param BaseEvent $event The event object that provides access to the application
      */
-    public function registerPublicationStart(BaseEvent $event)
+    public function registerPublicationStart(BaseEvent $event): void
     {
         $event->app['app.timer.start'] = microtime(true);
     }
@@ -44,7 +44,7 @@ class TimerPlugin implements EventSubscriberInterface
      *
      * @param BaseEvent $event The event object that provides access to the application
      */
-    public function registerPublicationEnd(BaseEvent $event)
+    public function registerPublicationEnd(BaseEvent $event): void
     {
         $event->app['app.timer.finish'] = microtime(true);
     }

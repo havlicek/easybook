@@ -40,7 +40,7 @@ class MarkdownParser implements ParserInterface
      */
     public function transform($content, $outputFormat = 'html')
     {
-        $supportedFormats = array('epub', 'epub2', 'epub3', 'html', 'html_chunked', 'pdf');
+        $supportedFormats = ['epub', 'epub2', 'epub3', 'html', 'html_chunked', 'pdf'];
 
         if (!in_array($outputFormat, $supportedFormats)) {
             throw new Exception(sprintf('No markdown parser available for "%s" format',
@@ -65,7 +65,7 @@ class MarkdownParser implements ParserInterface
      */
     private function transformToHtml(string $content, string $syntax): string
     {
-        $supportedSyntaxes = array('original', 'php-markdown-extra', 'easybook');
+        $supportedSyntaxes = ['original', 'php-markdown-extra', 'easybook'];
 
         if (!in_array($syntax, $supportedSyntaxes)) {
             throw new Exception(sprintf('Unknown "%s" Markdown syntax (options available: %s)',

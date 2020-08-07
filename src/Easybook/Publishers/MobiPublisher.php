@@ -22,7 +22,7 @@ class MobiPublisher extends Epub2Publisher
 {
     // Kindle Publishing Guidelines rule that ebooks
     // should contain an HTML TOC, so it cannot be excluded
-    protected $excludedElements = array('cover', 'lot', 'lof');
+    protected $excludedElements = ['cover', 'lot', 'lof'];
 
     public function checkIfThisPublisherIsSupported(): bool
     {

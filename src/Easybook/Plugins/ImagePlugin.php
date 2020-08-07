@@ -21,14 +21,14 @@ use Easybook\Events\ParseEvent;
  */
 class ImagePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            Events::POST_PARSE => array(
-                array('fixImageUris', -500),
-                array('decorateAndLabelImages', -500),
-            ),
-        );
+        return [
+            Events::POST_PARSE => [
+                ['fixImageUris', -500],
+                ['decorateAndLabelImages', -500],
+            ],
+        ];
     }
 
     /**
@@ -40,14 +40,14 @@ class ImagePlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function fixImageUris(ParseEvent $event)
+    public function fixImageUris(ParseEvent $event): void
     {
         $item = $event->getItem();
         $baseDir = $event->app->edition('images_base_dir');
 
         $item['content'] = preg_replace_callback(
             '/<img src="(.*)"(.*) \/>/U',
-            function ($matches) use ($baseDir) {
+            static function ($matches) use ($baseDir) {
                 $uri = $matches[1];
                 $uri = $baseDir.$uri;
 
@@ -65,13 +65,13 @@ class ImagePlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function decorateAndLabelImages(ParseEvent $event)
+    public function decorateAndLabelImages(ParseEvent $event): void
     {
         $item = $event->getItem();
 
-        $addImageLabels = in_array('figure', $event->app->edition('labels') ?: array());
+        $addImageLabels = in_array('figure', $event->app->edition('labels') ?: [], true);
         $parentItemNumber = $item['config']['number'];
-        $listOfImages = array();
+        $listOfImages = [];
         $counter = 0;
 
         $item['content'] = preg_replace_callback(
@@ -82,25 +82,25 @@ class ImagePlugin implements EventSubscriberInterface
             //        <img (...optional...) alt="..." (...optional...) />
             //      </div>
             '/(<p>)?(<div class="(?<align>.*)">)?(?<content><img .*alt="(?<title>[^"]*)".*\/>)(<\/div>)?(<\/p>)?/',
-            function ($matches) use ($event, $addImageLabels, $parentItemNumber, &$listOfImages, &$counter) {
+            static function ($matches) use ($event, $addImageLabels, $parentItemNumber, &$listOfImages, &$counter) {
                 // prepare figure parameters for the template and the label
-                $parameters = array(
-                    'item' => array(
+                $parameters = [
+                    'item' => [
                         'align' => $matches['align'],
                         'caption' => $matches['title'],
                         'content' => $matches['content'],
                         'label' => '',
                         'number' => null,
                         'slug' => '',
-                    ),
-                    'element' => array(
+                    ],
+                    'element' => [
                         'number' => $parentItemNumber,
-                    ),
-                );
+                    ],
+                ];
 
                 // '*' in title means this is a decorative image instead of
                 // a book figure or illustration
-                if ('*' != $matches['title']) {
+                if ($matches['title'] !== '*') {
                     $counter++;
                     $parameters['item']['number'] = $counter;
                     $parameters['item']['slug'] = $event->app->slugify('Figure '.$parentItemNumber.'-'.$counter);

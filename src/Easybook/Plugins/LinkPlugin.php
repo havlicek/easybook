@@ -22,12 +22,12 @@ use Easybook\Events\ParseEvent;
  */
 class LinkPlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            Events::POST_PARSE => array('markInternalLinks'),
-            Events::POST_PUBLISH => array('fixInternalLinks', -10),
-        );
+        return [
+            Events::POST_PARSE => ['markInternalLinks'],
+            Events::POST_PUBLISH => ['fixInternalLinks', -10],
+        ];
     }
 
     /**
@@ -46,10 +46,10 @@ class LinkPlugin implements EventSubscriberInterface
      *
      * @param BaseEvent $event The event object that provides access to the application
      */
-    public function fixInternalLinks(BaseEvent $event)
+    public function fixInternalLinks(BaseEvent $event): void
     {
         // Link fixing is only needed for 'html_chunked' editions
-        if ('html_chunked' != $event->app->edition('format')) {
+        if ($event->app->edition('format') !== 'html_chunked') {
             return;
         }
 
@@ -62,13 +62,13 @@ class LinkPlugin implements EventSubscriberInterface
         // maps the original internal links (e.g. #new-content-types)
         // with the correct relative URL needed for the website
         // (e.g. chapter-3/advanced-features.html#new-content-types
-        $linkMapper = array();
+        $linkMapper = [];
 
         // look for the ID of every book section
         foreach ($bookPages as $bookPage) {
             $htmlContent = file_get_contents($bookPage->getPathname());
 
-            $matches = array();
+            $matches = [];
             $foundHeadings = preg_match_all(
                 '/<h[1-6].*id="(?<id>.*)".*<\/h[1-6]>/U',
                 $htmlContent, $matches, PREG_SET_ORDER
@@ -90,7 +90,7 @@ class LinkPlugin implements EventSubscriberInterface
 
             // hackish method the detect if this is a first level book page
             // or a page inside a directory
-            if (false === strpos($bookPage->getRelativePathname(), '/')) {
+            if (strpos($bookPage->getRelativePathname(), '/') === false) {
                 $chunkLevel = 1;
             } else {
                 $chunkLevel = 2;
@@ -98,10 +98,10 @@ class LinkPlugin implements EventSubscriberInterface
 
             $htmlContent = preg_replace_callback(
                 '/<a href="(?<uri>#.*)"(.*)<\/a>/Us',
-                function ($matches) use ($chunkLevel, $linkMapper) {
+                static function ($matches) use ($chunkLevel, $linkMapper) {
                     if (isset($linkMapper[$matches['uri']])) {
                         $newUri = $linkMapper[$matches['uri']];
-                        $urlBasePath = (2 == $chunkLevel) ? '../' : './';
+                        $urlBasePath = ($chunkLevel === 2) ? '../' : './';
                     } else {
                         $newUri = $matches['uri'];
                         $urlBasePath = '';
@@ -125,10 +125,10 @@ class LinkPlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function markInternalLinks(ParseEvent $event)
+    public function markInternalLinks(ParseEvent $event): void
     {
         // Internal links are only marked for the PDF editions
-        if ('pdf' != $event->app->edition('format')) {
+        if ($event->app->edition('format') !== 'pdf') {
             return;
         }
 
@@ -136,7 +136,7 @@ class LinkPlugin implements EventSubscriberInterface
 
         $item['content'] = preg_replace_callback(
             '/<a (href="#.*".*)<\/a>/Us',
-            function ($matches) {
+            static function ($matches) {
                 // First check if there is an existing class attribute before
                 // adding a new class attribute and breaking the XHTML syntax
                 if (preg_match('/\bclass="(.*)"/Us', $matches[1]) !== false) {

@@ -21,13 +21,13 @@ class KindleGenServiceProvider implements ServiceProviderInterface
         $app['kindlegen.path'] = null;
 
         // the common installation dirs for KindleGen in several OS
-        $app['kindlegen.default_paths'] = array(
+        $app['kindlegen.default_paths'] = [
             # Mac OS X & Linux
             '/usr/local/bin/kindlegen',
             '/usr/bin/kindlegen',
             # Windows
             'c:\KindleGen\kindlegen',
-        );
+        ];
 
         // -c0: no compression
         // -c1: standard DOC compression

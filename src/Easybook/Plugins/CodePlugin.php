@@ -21,12 +21,12 @@ use Easybook\Events\ParseEvent;
  */
 class CodePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            Events::PRE_PARSE => array('parseCodeBlocks', -500),
-            Events::POST_PARSE => array('fixParsedCodeBlocks', -500),
-        );
+        return [
+            Events::PRE_PARSE => ['parseCodeBlocks', -500],
+            Events::POST_PARSE => ['fixParsedCodeBlocks', -500],
+        ];
     }
 
     /**
@@ -37,7 +37,7 @@ class CodePlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event
      */
-    public function parseCodeBlocks(ParseEvent $event)
+    public function parseCodeBlocks(ParseEvent $event): void
     {
         $codeBlockType = $event->app['parser.options']['code_block_type'];
 
@@ -62,7 +62,7 @@ class CodePlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function fixParsedCodeBlocks(ParseEvent $event)
+    public function fixParsedCodeBlocks(ParseEvent $event): void
     {
         $item = $event->getItem();
 
@@ -96,7 +96,7 @@ class CodePlugin implements EventSubscriberInterface
      * @param ParseEvent $event The event object that provides access to the $app and
      *                          the $item being parsed
      */
-    private function parseMarkdownTypeCodeBlocks(ParseEvent $event)
+    private function parseMarkdownTypeCodeBlocks(ParseEvent $event): void
     {
         // variable needed for PHP 5.3
         $self = $this;
@@ -116,7 +116,7 @@ class CodePlugin implements EventSubscriberInterface
                     ))
                 )
             }xm',
-            function ($matches) use ($self, $event) {
+            static function ($matches) use ($self, $event) {
                 $code = $matches['code'];
                 $indent = $matches['indent'];
 
@@ -128,7 +128,7 @@ class CodePlugin implements EventSubscriberInterface
                 $code = preg_replace_callback('{
                         ^\[(?<lang>.*)\]\n(?<code>.*)
                     }x',
-                    function ($matches) use (&$language) {
+                    static function ($matches) use (&$language) {
                         $language = trim($matches['lang']);
 
                         return $matches['code'];
@@ -173,7 +173,7 @@ class CodePlugin implements EventSubscriberInterface
      * @param ParseEvent $event The event object that provides access to the $app and
      *                          the $item being parsed
      */
-    private function parseGithubTypeCodeBlocks(ParseEvent $event)
+    private function parseGithubTypeCodeBlocks(ParseEvent $event): void
     {
         // variable needed for PHP 5.3
         $self = $this;
@@ -203,7 +203,7 @@ class CodePlugin implements EventSubscriberInterface
                 # Closing marker.
                 \1 [ ]* \n
             }Uxm',
-            function ($matches) use ($self, $event) {
+            static function ($matches) use ($self, $event) {
                 $language = $matches[2];
 
                 // codeblocks always end with an empty new line (due to the regexp used)
@@ -212,7 +212,7 @@ class CodePlugin implements EventSubscriberInterface
                 // whitespaces, tabs or new lines
                 $code = rtrim($matches[3]);
 
-                if ('' == $language) {
+                if ($language === '') {
                     $language = 'code';
                 }
 
@@ -252,7 +252,7 @@ class CodePlugin implements EventSubscriberInterface
      * @param ParseEvent $event The event object that provides access to the $app and
      *                          the $item being parsed
      */
-    private function parseFencedTypeCodeBlocks(ParseEvent $event)
+    private function parseFencedTypeCodeBlocks(ParseEvent $event): void
     {
         // variable needed for PHP 5.3
         $self = $this;
@@ -282,7 +282,7 @@ class CodePlugin implements EventSubscriberInterface
                 # Closing marker.
                 \1 [ ]* \n
             }Uxm',
-            function ($matches) use ($self, $event) {
+            static function ($matches) use ($self, $event) {
                 $language = $matches[2];
 
                 // codeblocks always end with an empty new line (due to the regexp used)
@@ -291,7 +291,7 @@ class CodePlugin implements EventSubscriberInterface
                 // whitespaces, tabs or new lines
                 $code = rtrim($matches[3]);
 
-                if ('' == $language) {
+                if ($language === '') {
                     $language = 'code';
                 }
 
@@ -315,7 +315,7 @@ class CodePlugin implements EventSubscriberInterface
      *
      * @return string The resulting code after the highlight and rendering process
      */
-    public function highlightAndDecorateCode($code, $language, Application $app)
+    public function highlightAndDecorateCode($code, $language, Application $app): string
     {
         if ($app->edition('highlight_code')) {
             // highlight code if the edition wants to
@@ -330,14 +330,14 @@ class CodePlugin implements EventSubscriberInterface
                 .'</pre>';
         }
 
-        $code = $app->render('code.twig', array(
-            'item' => array(
+        $code = $app->render('code.twig', [
+            'item' => [
                 'content' => $code,
                 'language' => $language,
                 'number' => '',
                 'slug' => '',
-            ),
-        ));
+            ],
+        ]);
 
         return $code;
     }

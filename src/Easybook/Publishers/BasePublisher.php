@@ -151,7 +151,7 @@ class BasePublisher implements PublisherInterface
      */
     public function parseContents(): void
     {
-        $parsedItems = array();
+        $parsedItems = [];
 
         foreach ($this->app['publishing.items'] as $item) {
             $this->app['publishing.active_item'] = $item;
@@ -169,7 +169,7 @@ class BasePublisher implements PublisherInterface
             // to delete all previous slugs, but if chunk_level = 2, we should only
             // remove the generated slugs for each section
             if ('html_chunked' === $this->app->edition('format')) {
-                $this->app['slugger.generated_slugs'] = array();
+                $this->app['slugger.generated_slugs'] = [];
             }
 
             $item['content'] = $this->app['parser']->transform($item['original']);
@@ -207,7 +207,7 @@ class BasePublisher implements PublisherInterface
      */
     public function decorateContents(): void
     {
-        $decoratedItems = array();
+        $decoratedItems = [];
 
         foreach ($this->app['publishing.items'] as $item) {
             $this->app['publishing.active_item'] = $item;
@@ -221,7 +221,7 @@ class BasePublisher implements PublisherInterface
 
             $item['content'] = $this->app->render(
                 $item['config']['element'].'.twig',
-                array('item' => $item)
+                ['item' => $item]
             );
 
             $this->app['publishing.active_item'] = $item;
@@ -247,7 +247,7 @@ class BasePublisher implements PublisherInterface
      */
     private function initializeItem(array $itemConfig): array
     {
-        $item = array();
+        $item = [];
 
         $item['config'] = array_merge(array(
             // the name of this item contents file (it's a relative path from book's `Contents/`)
@@ -267,7 +267,7 @@ class BasePublisher implements PublisherInterface
         $item['label'] = '';      // the label of this item ('Chapter XX', 'Appendix XX', ...)
         $item['title'] = '';      // the title of the item without any label ('Lorem ipsum dolor')
         $item['slug'] = '';      // the slug of the title
-        $item['toc'] = array(); // the table of contents of this item
+        $item['toc'] = []; // the table of contents of this item
 
         if (!empty($item['config']['title'])) {
             $item['title'] = $item['config']['title'];

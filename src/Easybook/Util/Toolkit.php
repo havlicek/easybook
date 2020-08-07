@@ -29,7 +29,7 @@ class Toolkit
      */
     public static function array_deep_merge_and_replace(array ...$arrays): ?array
     {
-        $merged = array();
+        $merged = [];
 
         while (!empty($arrays)) {
             $array = array_shift($arrays);

@@ -36,7 +36,7 @@ class EasybookConfigurationTest extends TestCase
         $config = $this->app['configurator']->loadBookFileConfiguration(null);
         $easybookConfig = isset($config['easybook'])
             ? $config['easybook']['parameters']
-            : array();
+            : [];
 
         $expectedConfiguration = Toolkit::array_deep_merge_and_replace($this->getEasybookDefaultParameters(), $easybookConfig);
         $this->assertEasybookConfiguration($expectedConfiguration);
@@ -68,7 +68,7 @@ class EasybookConfigurationTest extends TestCase
         $configurator = $this->getMock('Easybook\Configurator\BookConfigurator', array('loadBookFileConfiguration'), array($app));
         $configurator->expects($this->any())
             ->method('loadBookFileConfiguration')
-            ->will($this->returnValue(Yaml::parseFile($this->fixturesDir.'/'.$configFileName) ?: array()))
+            ->will($this->returnValue(Yaml::parseFile($this->fixturesDir.'/'.$configFileName) ?: []))
         ;
 
         $app['configurator'] = $configurator;

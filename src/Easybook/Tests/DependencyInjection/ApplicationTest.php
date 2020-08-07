@@ -243,7 +243,7 @@ class ApplicationTest extends TestCase
             $app['publishing.book.config'] = array('book' => array(
                 'language' => $locale,
                 'editions' => array(
-                    'edition1' => array(),
+                    'edition1' => [],
                 ),
             ));
 
@@ -281,7 +281,7 @@ class ApplicationTest extends TestCase
             $app['publishing.book.config'] = array('book' => array(
                 'language' => $locale,
                 'editions' => array(
-                    'edition1' => array(),
+                    'edition1' => [],
                 ),
             ));
 
@@ -311,7 +311,7 @@ class ApplicationTest extends TestCase
         $app['publishing.edition'] = 'edition1';
         $app['publishing.book.config'] = array('book' => array(
             'editions' => array(
-                'edition1' => array(),
+                'edition1' => [],
             ),
         ));
 

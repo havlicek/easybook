@@ -20,17 +20,17 @@ class ParserServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $app): void
     {
-        $app['parser.options'] = array(
+        $app['parser.options'] = [
             // available syntaxes: 'original', 'php-markdown-extra', 'easybook'
             'markdown_syntax' => 'easybook',
             // available types: 'markdown', 'fenced', 'github'
             'code_block_type' => 'markdown',
-        );
+        ];
 
-        $app['parser'] = function ($app) {
+        $app['parser'] = static function ($app) {
             $format = strtolower($app['publishing.active_item']['config']['format']);
 
-            if (in_array($format, array('md', 'mdown', 'markdown'))) {
+            if (in_array($format, ['md', 'mdown', 'markdown'])) {
                 return new MarkdownParser($app);
             }
 

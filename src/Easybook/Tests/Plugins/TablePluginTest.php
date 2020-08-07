@@ -35,7 +35,7 @@ class TablePluginTest extends TestCase
                 'editions' => array(
                     'test_edition' => array(
                         'format' => 'html',
-                        'labels' => $addLabels ? array('table') : array(),
+                        'labels' => $addLabels ? array('table') : [],
                         'theme' => 'clean',
                     ),
                 ),
@@ -93,7 +93,7 @@ class TablePluginTest extends TestCase
                 'expected_1_1.html',
                 1,
                 false,
-                array(),
+                [],
             ),
 
             array(
@@ -101,7 +101,7 @@ class TablePluginTest extends TestCase
                 'expected_2.html',
                 1,
                 false,
-                array(),
+                [],
             ),
 
             array(

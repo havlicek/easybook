@@ -27,7 +27,7 @@ class ToolkitTest extends TestCase
 
     public function testUuidMethodGeneratesRandomIds()
     {
-        $uuids = array();
+        $uuids = [];
         while (count($uuids) < 1000) {
             $uuids[] = Toolkit::uuid();
         }

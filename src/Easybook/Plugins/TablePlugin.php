@@ -21,11 +21,11 @@ use Easybook\Events\ParseEvent;
  */
 class TablePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            Events::POST_PARSE => array('decorateAndLabelTables', -500),
-        );
+        return [
+            Events::POST_PARSE => ['decorateAndLabelTables', -500],
+        ];
     }
 
     /**
@@ -34,32 +34,32 @@ class TablePlugin implements EventSubscriberInterface
      *
      * @param ParseEvent $event The object that contains the item being processed
      */
-    public function decorateAndLabelTables(ParseEvent $event)
+    public function decorateAndLabelTables(ParseEvent $event): void
     {
         $item = $event->getItem();
 
-        $addTableLabels = in_array('table', $event->app->edition('labels') ?: array());
+        $addTableLabels = in_array('table', $event->app->edition('labels') ?: [], true);
         $parentItemNumber = $item['config']['number'];
-        $listOfTables = array();
+        $listOfTables = [];
         $counter = 0;
 
         $item['content'] = preg_replace_callback(
             "/(?<content><table.*\n<\/table>)/Ums",
-            function ($matches) use ($event, $addTableLabels, $parentItemNumber, &$listOfTables, &$counter) {
+            static function ($matches) use ($event, $addTableLabels, $parentItemNumber, &$listOfTables, &$counter) {
                 // prepare table parameters for template and label
                 $counter++;
-                $parameters = array(
-                    'item' => array(
+                $parameters = [
+                    'item' => [
                         'caption' => '',
                         'content' => $matches['content'],
                         'label' => '',
                         'number' => $counter,
                         'slug' => $event->app->slugify('Table '.$parentItemNumber.'-'.$counter),
-                    ),
-                    'element' => array(
+                    ],
+                    'element' => [
                         'number' => $parentItemNumber,
-                    ),
-                );
+                    ],
+                ];
 
                 // the publishing edition wants to label tables
                 if ($addTableLabels) {

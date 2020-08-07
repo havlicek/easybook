@@ -115,7 +115,7 @@ class BookConfigurator
     {
         $config = Yaml::parseFile(__DIR__.'/DefaultConfigurations/book.yml');
 
-        return empty($config) ? array() : $config;
+        return empty($config) ? [] : $config;
     }
 
     /**
@@ -137,7 +137,7 @@ class BookConfigurator
             ));
         }
 
-        $editionConfig = $bookConfiguration['book']['editions'][$edition] ?: array();
+        $editionConfig = $bookConfiguration['book']['editions'][$edition] ?: [];
         $parentEditionConfig = $this->loadParentEditionConfiguration();
         $defaultConfig = $this->loadDefaultEditionConfiguration();
 
@@ -164,7 +164,7 @@ class BookConfigurator
         $edition = $this->app['publishing.edition'];
 
         $parentEdition = $this->app->edition('extends');
-        $parentEditionConfig = array();
+        $parentEditionConfig = [];
 
         if (null !== $parentEdition) {
             if (!isset($bookEditions[$parentEdition])) {
@@ -178,7 +178,7 @@ class BookConfigurator
                 ));
             }
 
-            $parentEditionConfig = $bookEditions[$parentEdition] ?: array();
+            $parentEditionConfig = $bookEditions[$parentEdition] ?: [];
         }
 
         return $parentEditionConfig;
@@ -193,7 +193,7 @@ class BookConfigurator
     {
         $config = Yaml::parseFile(__DIR__.'/DefaultConfigurations/edition.yml');
 
-        return $config['edition'] ?: array();
+        return $config['edition'] ?: [];
     }
 
     /**
@@ -211,7 +211,7 @@ class BookConfigurator
 
         // prepare options needed to parse option values as Twig expressions
         $app = clone $this->app;
-        $twig_variables = array('book' => $bookConfig['book'], 'edition' => $editionConfig);
+        $twig_variables = ['book' => $bookConfig['book'], 'edition' => $editionConfig];
 
         foreach ($bookConfig['book'] as $key => $value) {
             if (true !== $value && false !== $value && null !== $value && !is_array($value)) {

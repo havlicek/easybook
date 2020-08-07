@@ -48,14 +48,14 @@ class EasybookBenchmarkCommand extends BaseCommand
     {
         $this->output = $output;
 
-        $editions = array('ebook', 'web', 'website');
-        $advancedEditions = array('kindle', 'print');
+        $editions = ['ebook', 'web', 'website'];
+        $advancedEditions = ['kindle', 'print'];
 
         if ($input->getOption('full-benchmark')) {
             $editions = array_merge($editions, $advancedEditions);
         }
 
-        $iterations = intval($input->getOption('iterations'));
+        $iterations = (int) $input->getOption('iterations');
 
         $results = $this->benchmark($editions, $iterations);
         $this->displayResults($results);
@@ -74,7 +74,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      */
     private function benchmark(array $editions, int $iterations): array
     {
-        $results = array();
+        $results = [];
 
         $step = floor(100 / count($editions));
         $progressBar = $this->getHelperSet()->get('progress');
@@ -109,7 +109,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      */
     private function benchmarkEdition(string $edition, int $iterations): array
     {
-        $results = array();
+        $results = [];
 
         $publishBookCommand = sprintf(
             './book publish --dir=%s sherlock-holmes %s',
@@ -140,12 +140,12 @@ class EasybookBenchmarkCommand extends BaseCommand
             $consumedMemory = memory_get_peak_usage(true);
             $score = $this->getScore($elapsedTime, $consumedMemory, $edition);
 
-            $results[] = array(
+            $results[] = [
                 'format' => $edition,
                 'time' => $elapsedTime,
                 'memory' => $consumedMemory,
                 'score' => $score,
-            );
+            ];
         }
 
         return $results;
@@ -161,7 +161,7 @@ class EasybookBenchmarkCommand extends BaseCommand
      */
     private function calculateMeanResults(array $results): array
     {
-        $meanResults = array();
+        $meanResults = [];
 
         foreach ($results as $edition => $editionResults) {
             $totalTime = 0;
@@ -176,12 +176,12 @@ class EasybookBenchmarkCommand extends BaseCommand
                 $totalScore  += $result['score'];
             }
 
-            $meanResults[$edition] = array(
+            $meanResults[$edition] = [
                 'edition' => $edition,
                 'time' => number_format($totalTime / $iterations, 2, '.', ','),
                 'memory' => number_format($totalMemory / $iterations, 2, '.', ','),
                 'score' => number_format($totalScore / $iterations, 2, '.', ','),
-            );
+            ];
         }
 
         return $meanResults;
@@ -256,13 +256,13 @@ class EasybookBenchmarkCommand extends BaseCommand
      */
     private function getScore(float $elapsedTime, int $consumedMemory, string $edition): float
     {
-        $maxAcceptableValue = array(//   msec.              bytes
-            'ebook' => array('time' => 3000,  'memory' => 3 * 1024 * 1024),
-            'kindle' => array('time' => 6000,  'memory' => 6 * 1024 * 1024),
-            'print' => array('time' => 20000, 'memory' => 9 * 1024 * 1024),
-            'web' => array('time' => 3000,  'memory' => 3 * 1024 * 1024),
-            'website' => array('time' => 3000,  'memory' => 3 * 1024 * 1024),
-        );
+        $maxAcceptableValue = [//   msec.              bytes
+            'ebook' => ['time' => 3000, 'memory' => 3 * 1024 * 1024],
+            'kindle' => ['time' => 6000, 'memory' => 6 * 1024 * 1024],
+            'print' => ['time' => 20000, 'memory' => 9 * 1024 * 1024],
+            'web' => ['time' => 3000, 'memory' => 3 * 1024 * 1024],
+            'website' => ['time' => 3000, 'memory' => 3 * 1024 * 1024],
+        ];
 
         $timeScore = min($elapsedTime, $maxAcceptableValue[$edition]['time']) / $maxAcceptableValue[$edition]['time'];
         $memoryScore = min($consumedMemory, $maxAcceptableValue[$edition]['memory']) / $maxAcceptableValue[$edition]['memory'];

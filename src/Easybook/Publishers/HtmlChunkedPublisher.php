@@ -27,7 +27,7 @@ use Easybook\Events\BaseEvent;
 class HtmlChunkedPublisher extends HtmlPublisher
 {
     // these elements are so special that they cannot define a TOC
-    private $elementsWithoutToc = array('cover', 'toc');
+    private $elementsWithoutToc = ['cover', 'toc'];
 
     /**
      * Overrides the base publisher method to avoid the decoration of the book items.
@@ -37,7 +37,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      */
     public function decorateContents(): void
     {
-        $decoratedItems = array();
+        $decoratedItems = [];
 
         foreach ($this->app['publishing.items'] as $item) {
             $this->app['publishing.active_item'] = $item;
@@ -60,13 +60,13 @@ class HtmlChunkedPublisher extends HtmlPublisher
 
     public function assembleBook(): void
     {
-        $this->app['publishing.dir.output'] = $this->app['publishing.dir.output'].'/book';
+        $this->app['publishing.dir.output'] .= '/book';
         $this->app['filesystem']->mkdir($this->app['publishing.dir.output']);
 
         // generate easybook CSS file
         if ($this->app->edition('include_styles')) {
             $this->app->render('@theme/style.css.twig',
-                array('resources_dir' => $this->app['app.dir.resources'].'/'),
+                ['resources_dir' => $this->app['app.dir.resources'].'/'],
                 $this->app['publishing.dir.output'].'/css/easybook.css'
             );
         }
@@ -83,13 +83,13 @@ class HtmlChunkedPublisher extends HtmlPublisher
         $this->app['publishing.book.toc'] = $toc;
 
         foreach ($this->app['publishing.items'] as $item) {
-            if (!in_array($item['config']['element'], $this->elementsWithoutToc)) {
+            if (!in_array($item['config']['element'], $this->elementsWithoutToc, true)) {
                 $chunkToc = $this->chunkItem($item, $toc, $hasCustomCss, $this->app->edition('chunk_level'));
 
                 // chunk_level = 2 usually results in several book sections merged
                 // into others. To take this into account in the book index page,
                 // use the generated chunk toc instead of the regular book toc
-                if (2 == $this->app->edition('chunk_level')) {
+                if ($this->app->edition('chunk_level') === 2) {
                     $toc = $chunkToc;
                 }
             }
@@ -97,7 +97,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
 
         // generate index page
         $this->app->render('index.twig',
-            array('items' => $this->app['publishing.items'], 'toc' => $toc, 'has_custom_css' => $hasCustomCss),
+            ['items' => $this->app['publishing.items'], 'toc' => $toc, 'has_custom_css' => $hasCustomCss],
             $this->app['publishing.dir.output'].'/index.html'
         );
 
@@ -114,28 +114,28 @@ class HtmlChunkedPublisher extends HtmlPublisher
      */
     private function flattenToc(): array
     {
-        $flattenedToc = array();
+        $flattenedToc = [];
 
         $bookItems = $this->normalizePageNames($this->app['publishing.items']);
         $bookItems = $this->fixItemsWithEmptyTocs($bookItems);
 
         // calculate the URL of each book chunk and generate the flattened TOC
-        $items = array();
+        $items = [];
         foreach ($bookItems as $item) {
-            $itemToc = array();
+            $itemToc = [];
             foreach ($item['toc'] as $chunk) {
                 // first-level headers
-                if (isset($chunk['level']) && 1 == $chunk['level']) {
+                if (isset($chunk['level']) && $chunk['level'] === 1) {
                     $chunk['url'] = sprintf('%s.html', $item['page_name']);
                     $chunk['parent'] = null;
                     $chunk['config'] = $item['config']; // needed for templates
 
                     $parentChunk = $chunk;
                 // second-level headers
-                } elseif (isset($chunk['level']) && 2 == $chunk['level']) {
-                    if (1 == $this->app->edition('chunk_level')) {
+                } elseif (isset($chunk['level']) && $chunk['level'] === 2) {
+                    if ($this->app->edition('chunk_level') === 1) {
                         $chunk['url'] = sprintf('%s.html#%s', $item['page_name'], $chunk['slug']);
-                    } elseif (2 == $this->app->edition('chunk_level')) {
+                    } elseif ($this->app->edition('chunk_level') === 2) {
                         $chunk['url'] = sprintf('%s/%s.html', $item['page_name'], $chunk['slug']);
                     }
 
@@ -179,7 +179,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      */
     private function normalizePageNames(array $items): array
     {
-        $itemsWithNormalizedPageNames = array();
+        $itemsWithNormalizedPageNames = [];
 
         foreach ($items as $item) {
             $itemPageName = $this->app->slugify($item['label'] ?: $item['slug']);
@@ -205,20 +205,20 @@ class HtmlChunkedPublisher extends HtmlPublisher
      */
     private function fixItemsWithEmptyTocs(array $items): array
     {
-        $itemsWithFixedTocs = array();
+        $itemsWithFixedTocs = [];
 
         foreach ($items as $item) {
-            if (empty($item['toc']) && !in_array($item['config']['element'], $this->elementsWithoutToc)) {
-                $item['toc'] = array(
-                    array(
+            if (empty($item['toc']) && !in_array($item['config']['element'], $this->elementsWithoutToc, true)) {
+                $item['toc'] = [
+                    [
                         'level' => 1,
                         'title' => $item['title'],
                         'slug' => $item['slug'],
                         'label' => '',
                         'url' => $item['page_name'].'.html',
                         'parent' => null,
-                    ),
-                );
+                    ],
+                ];
             }
 
             $itemsWithFixedTocs[] = $item;
@@ -243,7 +243,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The whole new (and flattened) book TOC
      */
-    private function chunkItem($item, $bookToc, $hasCustomCss, $chunkLevel = 1)
+    private function chunkItem(array $item, array $bookToc, bool $hasCustomCss, int $chunkLevel = 1): array
     {
         if (1 == $chunkLevel) {
             return $this->generateFirstLevelChunks($item, $bookToc, $hasCustomCss);
@@ -264,19 +264,19 @@ class HtmlChunkedPublisher extends HtmlPublisher
      * @return array The whole (and flattened) book TOC (it can be
      *               modified inside this method)
      */
-    private function generateFirstLevelChunks($item, $bookToc, $hasCustomCss)
+    private function generateFirstLevelChunks(array $item, array $bookToc, bool $hasCustomCss): array
     {
         $chunkFilePath = $this->app['publishing.dir.output'].'/'.$item['page_name'].'.html';
         $bookToc = $this->filterBookToc($bookToc);
         $itemPosition = $this->findItemPosition($item, $bookToc);
 
-        $templateVariables = array(
+        $templateVariables = [
             'item' => $item,
             'toc' => $bookToc,
             'previous' => $this->getPreviousChunk($itemPosition, $bookToc),
             'next' => $this->getNextChunk($itemPosition, $bookToc),
             'has_custom_css' => $hasCustomCss,
-        );
+        ];
 
         // try first to render the specific template for each content
         // type, if it exists (e.g. toc.twig, chapter.twig, etc.) and
@@ -300,7 +300,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      * @return array The whole (and flattened) book TOC (it can be
      *               modified inside this method)
      */
-    private function generateSecondLevelChunks($item, $hasCustomCss)
+    private function generateSecondLevelChunks(array $item, bool $hasCustomCss): array
     {
         $chunks = $this->prepareItemChunks($item);
 
@@ -312,10 +312,10 @@ class HtmlChunkedPublisher extends HtmlPublisher
         foreach ($chunks as $chunk) {
             $itemPosition = $this->findItemPosition($chunk, $bookToc, 'url');
 
-            if (1 == $chunk['level']) {
+            if ($chunk['level'] === 1) {
                 $chunksDir = $this->app['publishing.dir.output'].'/'.$item['page_name'];
                 $chunkFilePath = $this->app['publishing.dir.output'].'/'.$item['page_name'].'.html';
-            } elseif (2 == $chunk['level']) {
+            } elseif ($chunk['level'] === 2) {
                 if (!file_exists($chunksDir)) {
                     $this->app['filesystem']->mkdir($chunksDir);
                 }
@@ -323,13 +323,13 @@ class HtmlChunkedPublisher extends HtmlPublisher
                 $chunkFilePath = $chunksDir.'/'.$chunk['slug'].'.html';
             }
 
-            $templateVariables = array(
+            $templateVariables = [
                 'item' => $chunk,
                 'toc' => $bookToc,
                 'previous' => $this->getPreviousChunk($itemPosition, $bookToc),
                 'next' => $this->getNextChunk($itemPosition, $bookToc),
                 'has_custom_css' => $hasCustomCss,
-            );
+            ];
 
             // try first to render the specific template for each content
             // type, if it exists (e.g. toc.twig, chapter.twig, etc.) and
@@ -380,7 +380,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The chunks the item has been split into
      */
-    private function prepareItemChunks($item)
+    private function prepareItemChunks(array $item): array
     {
         // divide the item content using '<h1>' and '<h2>' HTML sections
         $originalItemChunks = preg_split('/(<h[1-2].*<\/h[1-2]>)/', $item['content'],
@@ -388,7 +388,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
 
         // prepare each chunk information combining the item['toc'] information
         // with the contents extracted in the $originalItemChunks variable
-        $itemChunks = array();
+        $itemChunks = [];
         foreach ($item['toc'] as $i => $itemChunk) {
             if (1 == $itemChunk['level']) {
                 // include the item TOC in the first level-1 chunk
@@ -464,7 +464,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The filtered toc.
      */
-    private function filterBookToc($toc, $maxLevel = 1)
+    private function filterBookToc(array $toc, int $maxLevel = 1): array
     {
         $toc = array_filter($toc, function ($element) use ($maxLevel) {
             return $element['level'] <= $maxLevel;
@@ -486,11 +486,11 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return int The numeric position of the item inside the book TOC
      */
-    private function findItemPosition($item, $bookToc, $criteria = 'slug')
+    private function findItemPosition(array $item, array $bookToc, string $criteria = 'slug'): int
     {
         $position = -1;
         foreach ($bookToc as $i => $entry) {
-            if (isset($item[$criteria]) && $item[$criteria] == $entry[$criteria]) {
+            if (isset($item[$criteria]) && $item[$criteria] === $entry[$criteria]) {
                 $position = $i;
                 break;
             }
@@ -508,13 +508,9 @@ class HtmlChunkedPublisher extends HtmlPublisher
      *
      * @return array The item that goes before the current item
      */
-    private function getPreviousChunk($currentPosition, $bookToc)
+    private function getPreviousChunk(int $currentPosition, array $bookToc): array
     {
-        $previousChunk = isset($bookToc[$currentPosition - 1])
-            ? $bookToc[$currentPosition - 1]
-            : array('level' => 1, 'slug' => 'index', 'url' => 'index.html');
-
-        return $previousChunk;
+        return $bookToc[$currentPosition - 1] ?? ['level' => 1, 'slug' => 'index', 'url' => 'index.html'];
     }
 
     /**
@@ -527,7 +523,7 @@ class HtmlChunkedPublisher extends HtmlPublisher
      * @return array|null The item that should follow the current item
      *                    or null if this is the last chunk
      */
-    private function getNextChunk($currentPosition, $bookToc)
+    private function getNextChunk(int $currentPosition, array $bookToc): ?array
     {
         $nextChunk = isset($bookToc[$currentPosition + 1])
             ? $bookToc[$currentPosition + 1]

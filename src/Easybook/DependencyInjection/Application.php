@@ -82,55 +82,55 @@ SIGNATURE;
         $this['publishing.dir.templates'] = '';
         $this['publishing.dir.output'] = '';
         $this['publishing.edition'] = '';
-        $this['publishing.items'] = array();
+        $this['publishing.items'] = [];
         // the specific item currently being parsed/modified/decorated/...
-        $this['publishing.active_item'] = array();
-        $this['publishing.active_item.toc'] = array();
-        $this['publishing.book.config'] = array('book' => array());
+        $this['publishing.active_item'] = [];
+        $this['publishing.active_item.toc'] = [];
+        $this['publishing.book.config'] = ['book' => []];
         $this['publishing.book.slug'] = '';
-        $this['publishing.book.items'] = array();
+        $this['publishing.book.items'] = [];
         // the real TOC used to generate the book (needed for html_chunked editions)
-        $this['publishing.book.toc'] = array();
+        $this['publishing.book.toc'] = [];
         // holds all the internal links (used in html_chunked and epub editions)
-        $this['publishing.links'] = array();
-        $this['publishing.list.images'] = array();
-        $this['publishing.list.tables'] = array();
+        $this['publishing.links'] = [];
+        $this['publishing.list.images'] = [];
+        $this['publishing.list.tables'] = [];
 
-        $this['publishing.edition.id'] = function ($app) {
+        $this['publishing.edition.id'] = static function ($app) {
             if (null !== $isbn = $app->edition('isbn')) {
-                return array('scheme' => 'isbn', 'value' => $isbn);
+                return ['scheme' => 'isbn', 'value' => $isbn];
             }
 
             // for ISBN-less books, generate a unique RFC 4211 UUID v4 ID
-            return array('scheme' => 'URN', 'value' => Toolkit::uuid());
+            return ['scheme' => 'URN', 'value' => Toolkit::uuid()];
         };
         // maintained for backwards compatibility
-        $this['publishing.id'] = function () {
+        $this['publishing.id'] = static function () {
             trigger_error('The "publishing.id" option is deprecated since version 5.0 and will be removed in the future. Use "publishing.edition.id" instead.', E_USER_DEPRECATED);
         };
 
         // -- event dispatcher ------------------------------------------------
-        $this['dispatcher'] = function () {
+        $this['dispatcher'] = static function () {
             return new EventDispatcher();
         };
 
         // -- finder ----------------------------------------------------------
-        $this['finder'] = $this->factory(function () {
+        $this['finder'] = $this->factory(static function () {
             return new Finder();
         });
 
         // -- filesystem ------------------------------------------------------
-        $this['filesystem'] = $this->factory(function () {
+        $this['filesystem'] = $this->factory(static function () {
             return new Filesystem();
         });
 
         // -- configurator ----------------------------------------------------
-        $this['configurator'] = function ($app) {
+        $this['configurator'] = static function ($app) {
             return new BookConfigurator($app);
         };
 
         // -- validator -------------------------------------------------------
-        $this['validator'] = function ($app) {
+        $this['validator'] = static function ($app) {
             return new Validator($app);
         };
 
@@ -143,7 +143,7 @@ SIGNATURE;
         $this->register(new CodeHighlighterServiceProvider());
 
         // -- labels ---------------------------------------------------------
-        $this['labels'] = function () use ($app) {
+        $this['labels'] = static function () use ($app) {
             $labels = Yaml::parseFile(
                 $app['app.dir.translations'].'/labels.'.$app->book('language').'.yml'
             );
@@ -159,7 +159,7 @@ SIGNATURE;
         };
 
         // -- titles ----------------------------------------------------------
-        $this['titles'] = function () use ($app) {
+        $this['titles'] = static function () use ($app) {
             $titles = Yaml::parseFile(
                 $app['app.dir.translations'].'/titles.'.$app->book('language').'.yml'
             );
@@ -354,7 +354,7 @@ SIGNATURE;
      *
      *  @throws \RuntimeException  If the given template is not a Twig template
      */
-    public function render(string $template, array $variables = array(), $targetFile = null): string
+    public function render(string $template, array $variables = [], $targetFile = null): string
     {
         if ('.twig' != substr($template, -5)) {
             throw new RuntimeException(sprintf(
@@ -410,11 +410,11 @@ SIGNATURE;
     public function getCustomLabelsFile(): ?string
     {
         $labelsFileName = 'labels.'.$this->book('language').'.yml';
-        $paths = array(
+        $paths = [
             $this['publishing.dir.resources'].'/Translations/'.$this['publishing.edition'],
             $this['publishing.dir.resources'].'/Translations/'.$this->edition('format'),
             $this['publishing.dir.resources'].'/Translations',
-        );
+        ];
 
         return $this->getFirstExistingFile($labelsFileName, $paths);
     }
@@ -430,11 +430,11 @@ SIGNATURE;
     public function getCustomTitlesFile(): ?string
     {
         $titlesFileName = 'titles.'.$this->book('language').'.yml';
-        $paths = array(
+        $paths = [
             $this['publishing.dir.resources'].'/Translations/'.$this['publishing.edition'],
             $this['publishing.dir.resources'].'/Translations/'.$this->edition('format'),
             $this['publishing.dir.resources'].'/Translations',
-        );
+        ];
 
         return $this->getFirstExistingFile($titlesFileName, $paths);
     }
@@ -450,11 +450,11 @@ SIGNATURE;
     public function getCustomCoverImage(): ?string
     {
         $coverFileName = 'cover.jpg';
-        $paths = array(
+        $paths = [
             $this['publishing.dir.templates'].'/'.$this['publishing.edition'],
             $this['publishing.dir.templates'].'/'.$this->edition('format'),
             $this['publishing.dir.templates'],
-        );
+        ];
 
         return $this->getFirstExistingFile($coverFileName, $paths);
     }
@@ -540,7 +540,7 @@ SIGNATURE;
 
         foreach ($bookFileConfig['easybook']['parameters'] as $option => $value) {
             if (is_array($value)) {
-                $previousArray = $this->offsetExists($option) ? $this[$option] : array();
+                $previousArray = $this->offsetExists($option) ? $this[$option] : [];
                 $newArray = array_merge($previousArray, $value);
                 $this[$option] = $newArray;
             } else {

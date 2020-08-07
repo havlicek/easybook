@@ -20,15 +20,15 @@ class SluggerServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $app): void
     {
-        $app['slugger.options'] = array(
+        $app['slugger.options'] = [
             'separator' => '-', // used between words and instead of illegal characters
             'prefix' => '',     // prefix to be appended at the beginning of the slug
-        );
+        ];
 
         // stores all the generated slugs to ensure slug uniqueness
-        $app['slugger.generated_slugs'] = array();
+        $app['slugger.generated_slugs'] = [];
 
-        $app['slugger'] = function () use ($app) {
+        $app['slugger'] = static function () use ($app) {
             if (PHP_VERSION_ID > 50400) {
                 return new Utf8Slugger($app['slugger.options']['separator']);
             } else {

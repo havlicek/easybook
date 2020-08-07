@@ -19,7 +19,7 @@ class EasybookVersionCommand extends BaseCommand
     protected function configure(): void
     {
         $this
-            ->setDefinition(array())
+            ->setDefinition([])
             ->setName('version')
             ->setDescription('Shows installed easybook version')
             ->setHelp('The <info>version</info> command shows you the installed version of <info>easybook</info>');

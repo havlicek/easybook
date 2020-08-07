@@ -25,7 +25,7 @@ class PdfPublisherTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app['prince.path'] = null;
-        $app['prince.default_paths'] = array();
+        $app['prince.default_paths'] = [];
         $app['console.input'] = null;
 
         $helpMessage = <<<HELP
@@ -49,8 +49,8 @@ HELP;
         $app = new Application();
 
         $app['prince.path'] = null;
-        $app['prince.default_paths'] = array();
-        $app['console.input'] = new ArrayInput(array());
+        $app['prince.default_paths'] = [];
+        $app['console.input'] = new ArrayInput([]);
 
         $publisher = $this->getMock('Easybook\Publishers\PdfPublisher',
             array('askForPrinceXMLPath'),
@@ -73,8 +73,8 @@ HELP;
         $app = new Application();
 
         $app['prince.path'] = null;
-        $app['prince.default_paths'] = array();
-        $app['console.input'] = new ArrayInput(array());
+        $app['prince.default_paths'] = [];
+        $app['console.input'] = new ArrayInput([]);
 
         $publisher = $this->getMock('Easybook\Publishers\PdfPublisher',
             array('askForPrinceXMLPath'),

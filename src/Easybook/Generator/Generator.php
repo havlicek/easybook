@@ -33,12 +33,12 @@ abstract class Generator
     protected function render($skeletonDir, string $template, array $parameters): string
     {
         $loader = new Twig_Loader_Filesystem($skeletonDir);
-        $twig = new Twig_Environment($loader, array(
+        $twig = new Twig_Environment($loader, [
             'debug' => true,
             'cache' => false,
             'strict_variables' => true,
             'autoescape' => false,
-        ));
+        ]);
 
         return $twig->render($template, $parameters);
     }

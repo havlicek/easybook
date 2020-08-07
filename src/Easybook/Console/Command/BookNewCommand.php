@@ -58,13 +58,13 @@ class BookNewCommand extends BaseCommand
         $generator->setFilesystem($this->app['filesystem']);
         $generator->setSkeletonDirectory($this->app['app.dir.skeletons'].'/Book');
         $generator->setBookDirectory($dir.'/'.$slug);
-        $generator->setConfiguration(array(
-            'generator' => array(
+        $generator->setConfiguration([
+            'generator' => [
                 'name' => $this->app['app.name'],
                 'version' => $this->app->getVersion(),
-            ),
+            ],
             'title' => $title,
-        ));
+        ]);
         $generator->generate();
 
         $this->app->dispatch(Events::POST_NEW, new BaseEvent($this->app));

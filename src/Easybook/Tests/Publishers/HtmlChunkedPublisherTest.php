@@ -93,7 +93,7 @@ class HtmlChunkedPublisherTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 0,
-                array(),
+                [],
             ),
 
             array(

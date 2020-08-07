@@ -23,13 +23,13 @@ class PrinceXMLServiceProvider implements ServiceProviderInterface
         $app['prince.path'] = null;
 
         // the common installation dirs for PrinceXML in several OS
-        $app['prince.default_paths'] = array(
+        $app['prince.default_paths'] = [
             '/usr/local/bin/prince',                         # Mac OS X
             '/usr/bin/prince',                               # Linux
             'C:\Program Files\Prince\engine\bin\prince.exe',  # Windows
-        );
+        ];
 
-        $app['prince'] = function () use ($app) {
+        $app['prince'] = static function () use ($app) {
             $princePath = $app['prince.path'] ?: $app->findPrinceXmlExecutable();
             // ask the user about the location of the executable
             if (null === $princePath) {

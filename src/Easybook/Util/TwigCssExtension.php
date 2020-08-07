@@ -185,11 +185,11 @@ class TwigCssExtension extends Twig_Extension
         // expanded hex colors can only have 6 characters
         $hex = substr($hex, 0, 6);
 
-        return array(
+        return [
             hexdec(substr($hex, 0, 2)),
             hexdec(substr($hex, 2, 2)),
             hexdec(substr($hex, 4, 2)),
-        );
+        ];
     }
 
     /**
@@ -243,7 +243,7 @@ class TwigCssExtension extends Twig_Extension
             $h /= 6;
         }
 
-        return array($h, $s, $l);
+        return [$h, $s, $l];
     }
 
     /**

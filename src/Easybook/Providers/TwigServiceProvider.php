@@ -22,15 +22,15 @@ class TwigServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $app): void
     {
-        $app['twig.options'] = array(
+        $app['twig.options'] = [
             'autoescape' => false,
             // 'cache'         => $app['app.dir.cache'].'/Twig',
             'charset' => $app['app.charset'],
             'debug' => $app['app.debug'],
             'strict_variables' => $app['app.debug'],
-        );
+        ];
 
-        $app['twig.loader'] = function () use ($app) {
+        $app['twig.loader'] = static function () use ($app) {
             $theme = ucfirst($app->edition('theme'));
             $format = Toolkit::camelize($app->edition('format'), true);
 
@@ -49,14 +49,14 @@ class TwigServiceProvider implements ServiceProviderInterface
             $loader->prependPath($bookThemeDir);
             $loader->prependPath($bookThemeDir, 'theme');
 
-            $userTemplatePaths = array(
+            $userTemplatePaths = [
                 // <book-dir>/Resources/Templates/<template-name>.twig
                 $app['publishing.dir.templates'],
                 // <book-dir>/Resources/Templates/<edition-type>/<template-name>.twig
                 sprintf('%s/%s', $app['publishing.dir.templates'], strtolower($format)),
                 // <book-dir>/Resources/Templates/<edition-name>/<template-name>.twig
                 sprintf('%s/%s', $app['publishing.dir.templates'], $app['publishing.edition']),
-            );
+            ];
 
             foreach ($userTemplatePaths as $path) {
                 if (file_exists($path)) {
@@ -64,12 +64,12 @@ class TwigServiceProvider implements ServiceProviderInterface
                 }
             }
 
-            $defaultContentPaths = array(
+            $defaultContentPaths = [
                 // <easybook>/app/Resources/Themes/Base/<edition-type>/Contents/<template-name>.twig
                 sprintf('%s/Base/%s/Contents', $app['app.dir.themes'], $format),
                 // <easybook>/app/Resources/Themes/<theme>/<edition-type>/Contents/<template-name>.twig
                 sprintf('%s/%s/%s/Contents', $app['app.dir.themes'], $theme, $format),
-            );
+            ];
 
             foreach ($defaultContentPaths as $path) {
                 if (file_exists($path)) {

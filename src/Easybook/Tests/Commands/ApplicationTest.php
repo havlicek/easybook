@@ -54,7 +54,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testApplicationSignature()
     {
         $tester = new ApplicationTester($this->console);
-        $tester->run(array(), array('decorated' => false));
+        $tester->run([], array('decorated' => false));
 
         $this->assertContains(
             $this->app['app.signature'],
